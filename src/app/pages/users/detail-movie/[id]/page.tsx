@@ -39,10 +39,8 @@ export default function DetailMovie({ params } : IdParamsProps) {
   const {data: session, status} = useSession();
   const userAuth: UserAuth | undefined = session?.user;
   
-  
   // context check auth
   const { userCheckAuth, setUserCheckAuth } = useContext(AuthContext);
-  console.log("data : ", userCheckAuth);
   
   const router = useRouter();
 

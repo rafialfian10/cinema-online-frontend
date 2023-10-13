@@ -30,7 +30,7 @@ import styles from './list-transaction.module.css';
 function ListTransaction({ searchParams }: {searchParams: { [key: string]: string | string[] | undefined }}) {
   // session
   const {data: session, status} = useSession();
-  const userAuth: UserAuth | undefined = session?.user;  
+  const userAuth: UserAuth | undefined = session?.user;    
 
   // state transactions
   const [transactions, setTransactions] = useState<any[]>([]);  
