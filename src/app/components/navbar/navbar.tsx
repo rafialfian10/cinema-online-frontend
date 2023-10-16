@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import  { useRouter } from 'next/navigation';
 import { signOut, useSession  } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 
 // componets react
 import { useState, useEffect, Fragment } from 'react';
@@ -44,17 +43,6 @@ import logout from '@/assets/img/logout.png';
 // css
 import './navbar.module.css';
 //---------------------------------------------------------------------
-
-async function getAllMovies() {
-    const response = await fetch('http://localhost:5000/api/v1/movies', {
-      cache: 'no-cache',
-    });
-  
-    if (!response.ok) {
-      throw new Error('Failed to fetch data');
-    }
-    return await response.json();
-}
 
 function classNames(...classes: any[]) {
     return classes.filter(Boolean).join(' ')
@@ -303,7 +291,7 @@ export default function Navbar() {
                                 <Link href="/"><Image src={icon} alt="icon" className='mr-10' priority={true} /></Link>
                                 <div className='hidden sm:block'>
                                     <div className='fixed top-3'>
-                                        <SearchHome filteredMovies={filteredMovies} search={search} handleSearchMovie={handleSearchMovie} />
+                                        <SearchHome id='search1' filteredMovies={filteredMovies} search={search} handleSearchMovie={handleSearchMovie} />
                                     </div>
                                 </div>
                             </div>
@@ -446,7 +434,7 @@ export default function Navbar() {
                             <button className='mb-1 px-2 text-start text-[#D2D2D2] hover:bg-[#313131]' onClick={handleLogout}>Logout</button>
                         </div>
                     )}
-                    <SearchHome filteredMovies={filteredMovies} search={search} handleSearchMovie={handleSearchMovie} />
+                    <SearchHome id='search2' filteredMovies={filteredMovies} search={search} handleSearchMovie={handleSearchMovie} />
                 </Disclosure.Panel>
                 </>
             )}
@@ -457,4 +445,15 @@ export default function Navbar() {
             <ModalPremium modalPremium={modalPremium} fetchUser={fetchUser} setModalPremium={setModalPremium} closeModalPremium={closeModalPremium} />
         </Fragment>
     )
+}
+
+async function getAllMovies() {
+    const response = await fetch('http://localhost:5000/api/v1/movies', {
+      cache: 'no-cache',
+    });
+  
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
+    return await response.json();
 }

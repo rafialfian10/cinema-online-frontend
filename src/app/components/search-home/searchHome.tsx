@@ -8,12 +8,13 @@ import React from 'react';
 // ----------------------------------------
 
 export interface SearchMovieProps {
+    id: string;
     filteredMovies: any;
     search: string;
     handleSearchMovie: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function SearchHome({ filteredMovies, search, handleSearchMovie }: SearchMovieProps) {
+export default function SearchHome({ id, filteredMovies, search, handleSearchMovie }: SearchMovieProps) {
     const router = useRouter();
 
     // handle route movie
@@ -33,7 +34,7 @@ export default function SearchHome({ filteredMovies, search, handleSearchMovie }
                                     <path className='heroicon-ui' d='M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z'/>
                                 </svg>
                             </div>
-                            <input type='text' id='search' className='w-full rounded-md bg-[#3E3E3E] text-[#D2D2D2] leading-tight focus:outline-none p-2' placeholder='Search movies...' value={search} onChange={handleSearchMovie} />
+                            <input type='text' id={id} className='w-full rounded-md bg-[#3E3E3E] text-[#D2D2D2] leading-tight focus:outline-none p-2' placeholder='Search movies...' value={search} onChange={handleSearchMovie} />
                         </div>
 
                         <div className='text-sm'>

@@ -181,20 +181,20 @@ export default function Swipers({ movies }: MoviesProps) {
         }
     };
 
-    // useEffect(() => {
-    //     const midtransScriptUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
-    //     const myMidtransClientKey = process.env.MIDTRANS_CLIENT_KEY_TRANSACTION_MOVIE as string;
+    useEffect(() => {
+        const midtransScriptUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
+        const myMidtransClientKey = process.env.MIDTRANS_CLIENT_KEY_TRANSACTION_MOVIE as string;
     
-    //     let scriptTag = document.createElement('script');
-    //     scriptTag.src = midtransScriptUrl;
+        let scriptTag = document.createElement('script');
+        scriptTag.src = midtransScriptUrl;
     
-    //     scriptTag.setAttribute('data-client-key', myMidtransClientKey);
+        scriptTag.setAttribute('data-client-key', myMidtransClientKey);
     
-    //     document.body.appendChild(scriptTag);
-    //     return () => {
-    //         document.body.removeChild(scriptTag);
-    //     };
-    // }, []);
+        document.body.appendChild(scriptTag);
+        return () => {
+            document.body.removeChild(scriptTag);
+        };
+    }, []);
 
     useEffect(() => {
         if (status === 'authenticated') {
@@ -209,7 +209,7 @@ export default function Swipers({ movies }: MoviesProps) {
                 return (
                     <SwiperSlide key={movie?.id} className='px-16 pt-5 pb-10 max-md:px-10 max-sm:p-0 w-full h-full'>
                         <div className='w-full relative rounded-lg'>
-                            <Image src={movie?.thumbnail} alt={movie?.title} layout='responsive' width={500} height={0} className='w-full h-full object-cover overflow-hidden rounded-lg shadow-md shadow-gray-700'/>
+                            <Image src={movie?.thumbnail} alt={movie?.title} width={500} height={0} className='w-full h-full object-cover overflow-hidden rounded-lg shadow-md shadow-gray-700' priority={true} />
                             <div className='w-2/3 max-md:w-full top-12 max-md:top-3 px-10 max-md:px-5 max-sm:px-10 absolute flex flex-col'>
                                 <p className='mb-3 max-md:mb-1 max-sm:mb-0 text-4xl max-md:text-2xl max-sm:text-lg font-extrabold text-[#A52620]'>{movie?.title}</p>
                                 <div className='flex flex-wrap'>
@@ -229,7 +229,11 @@ export default function Swipers({ movies }: MoviesProps) {
                                 ) : (
                                     ''
                                 )}
-                                <button type='button' className='w-40 max-md:w-28 p-3 max-md:p-1 text-sm max-md:text-base max-sm:text-xs bg-[#CD2E71] text-[#D2D2D2] font-bold rounded-md' onClick={(e) => {handleBuy(movie, e); showLogin()}}>Buy Now</button>
+                                {(userCheckAuth?.premi?.status !== true) ? (
+                                    <button type='button' className='w-40 max-md:w-28 p-3 max-md:p-1 text-sm max-md:text-base max-sm:text-xs bg-[#CD2E71] text-[#D2D2D2] font-bold rounded-md' onClick={(e) => {handleBuy(movie, e); showLogin()}}>Buy Now</button>
+                                ) : (
+                                    <></>
+                                )}
                             </div>
                         </div>
                     </SwiperSlide>

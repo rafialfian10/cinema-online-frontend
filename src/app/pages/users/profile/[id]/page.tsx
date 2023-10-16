@@ -196,9 +196,9 @@ function Profile({ params }: ProfileProps) {
             <div className='w-1/2 flex flex-col mr-5'>
               <form encType='multipart/form-data'>
                 {user && user?.photo !== 'http://localhost:5000/uploads/photo/' ? (
-                  <Image src={user?.photo} alt='photo-profile' width={300} height={300} layout='responsive' className='h-300 rounded-md shadow-md shadow-gray-700' priority={true} />
+                  <Image src={user?.photo} alt='photo-profile' width={300} height={0} layout='responsive' className='h-300 rounded-md shadow-md shadow-gray-700' priority={true} />
                 ) : (
-                  <Image src={defaultPhoto} alt='photo-profile' width={300} height={300} layout='responsive' className='h-300 rounded-md shadow-md shadow-gray-700' priority={true} />
+                  <Image src={defaultPhoto} alt='photo-profile' width={300} height={0} layout='responsive' className='h-300 rounded-md shadow-md shadow-gray-700' priority={true} />
                 )}
                 <div className='mt-5 relative'>
                   <input type='file' id='photo' className='w-full hidden absolute' onChange={handleUpdatePhoto} /> 
