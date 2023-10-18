@@ -22,12 +22,13 @@ export default function AuthUser(Component: any) {
             if (status === 'loading') {
                 // Session is loading, do nothing
                 return;
-              }
+            }
         
-              if (!userAuth || userAuth?.data?.role !== 'user' || status === 'unauthenticated') {
-                signIn(); 
+            if (!userAuth || userAuth?.data?.role !== 'user' || status === 'unauthenticated') {
+                // signIn(); 
+                router.push('/');
                 return;
-              }
+            }
         }, [status, userAuth, router])
 
         if (status === 'loading') {

@@ -337,7 +337,7 @@ export default function Navbar() {
 
                                                     <Menu.Item>
                                                         {({ active }) => (
-                                                            <Link href={`/pages/users/profile/${user?.id}`} className={classNames(active ? 'hover:bg-[#313131]' : '', 'block px-4 py-2 text-sm text-[#D2D2D2]')}>Your Profile</Link>
+                                                            <Link href={`/pages/users/profile-user/${user?.id}`} className={classNames(active ? 'hover:bg-[#313131]' : '', 'block px-4 py-2 text-sm text-[#D2D2D2]')}>Your Profile</Link>
                                                         )}
                                                     </Menu.Item>
                                                     <Menu.Item>
@@ -375,7 +375,7 @@ export default function Navbar() {
                                                 <Menu.Items className='absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md py-1 bg-[#0D0D0D] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
                                                     <Menu.Item>
                                                         {({ active }) => (
-                                                            <Link href={`/pages/users/profile/${user?.id}`} className={classNames(active ? 'hover:bg-[#313131]' : '', 'block px-4 py-2 text-sm text-[#D2D2D2]')}>Your Profile</Link>
+                                                            <Link href={`/pages/admin/profile-admin/${user?.id}`} className={classNames(active ? 'hover:bg-[#313131]' : '', 'block px-4 py-2 text-sm text-[#D2D2D2]')}>Your Profile</Link>
                                                         )}
                                                     </Menu.Item>
                                                     <Menu.Item>
@@ -421,13 +421,13 @@ export default function Navbar() {
                             ) : (
                                 <ButtonPremium openModalPremium={openModalPremium} />
                             )}
-                            <Link href={`/pages/users/profile/${user?.id}`} className='mb-1 px-2 text-[#D2D2D2] hover:bg-[#313131]'>Your Profile</Link>
+                            <Link href={`/pages/users/profile-user/${user?.id}`} className='mb-1 px-2 text-[#D2D2D2] hover:bg-[#313131]'>Your Profile</Link>
                             <Link href="/pages/users/my-list-movie" className='mb-1 px-2 text-[#D2D2D2] hover:bg-[#313131]'>My Movie</Link>
                             <button className='mb-1 px-2 text-start text-[#D2D2D2] hover:bg-[#313131]' onClick={handleLogout}>Logout</button>
                         </div>
                     ) : (
                         <div className='space-y-1 px-5 pb-3 pt-2 flex flex-col gap-1'>
-                            <Link href={`/pages/users/profile/${user?.id}`} className='mb-1 px-2 text-[#D2D2D2] hover:bg-[#313131]'>Your Profile</Link>
+                            <Link href={`/pages/admin/profile-admin/${user?.id}`} className='mb-1 px-2 text-[#D2D2D2] hover:bg-[#313131]'>Your Profile</Link>
                             <Link href="/pages/admin/list-movie" className='mb-1 px-2 text-[#D2D2D2] hover:bg-[#313131]'>List Movie</Link>
                             <Link href="/pages/admin/list-category" className='mb-1 px-2 text-[#D2D2D2] hover:bg-[#313131]'>List Category</Link>
                             <Link href="/pages/admin/list-transaction" className='mb-1 px-2 text-[#D2D2D2] hover:bg-[#313131]'>List Transaction</Link>

@@ -31,7 +31,7 @@ interface ProfileProps {
   params: { id: string }
 }
 
-function Profile({ params }: ProfileProps) {
+function ProfileUser({ params }: ProfileProps) {
   // const [user, transaction] = await Promise.all([getUsers(), getTransactions()])
 
   // session
@@ -276,7 +276,6 @@ function Profile({ params }: ProfileProps) {
           <div className='w-full max-md:mt-10'>
             <p className='w-full mb-5 text-end font-bold text-2xl text-[#D2D2D2]'>History Transaction</p>
             <div className='overflow-y-auto' style={{height: '70vh'}}>
-
               {transactions?.map((transaction, i) => {
                 return (
                   <div className='mb-5 px-5 py-3 bg-[#6e1d3e] rounded-md' key={i}>
@@ -301,6 +300,5 @@ function Profile({ params }: ProfileProps) {
   )
 }
 
-// export default Profile;
-export default AuthUser(Profile);
+export default AuthUser(ProfileUser);
 
