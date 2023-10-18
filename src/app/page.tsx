@@ -22,9 +22,9 @@ import { getMovies } from '@/libs/movies';
 
 export default async function Home({ searchParams }: {searchParams: { [key: string]: string | string[] | undefined }}) { 
   // session
-  // let session = await getServerSession(Options);
-  // const userAuth: UserAuth | undefined = session?.user;
-
+  let session = await getServerSession(Options);
+  const userAuth: UserAuth | undefined = session?.user;
+  
   const moviesResponse = await getMovies(); 
   const movies = moviesResponse.props.data.data;
   

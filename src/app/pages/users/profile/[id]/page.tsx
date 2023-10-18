@@ -301,5 +301,6 @@ function Profile({ params }: ProfileProps) {
   )
 }
 
+// export default Profile;
 export default AuthUser(Profile);
 

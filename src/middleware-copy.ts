@@ -11,7 +11,7 @@
 
 // const protectedRoutes = ['/pages/admin/list-transaction', '/pages/admin/list-movie', '/pages/admin/list-category', '/pages/admin/add-movie', '/pages/admin/add-category', '/pages/admin/update-transaction', '/pages/admin/update-movie', '/pages/admin/update-category' ]
 
-// export default function middleware(request: NextRequest) {
+// export default async function middleware(request: NextRequest) {
 //     // session
 //     let session = await getServerSession(Options);
 //     const userAuth: UserAuth | undefined = session?.user;
@@ -59,6 +59,6 @@
 //     }
 // )
 
-// // Applies next-auth only to matching routes - can be regex
-// // Ref: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
+// Applies next-auth only to matching routes - can be regex
+// Ref: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
 // export const config = { matcher: ["/extra", "/client", "/dashboard"] }

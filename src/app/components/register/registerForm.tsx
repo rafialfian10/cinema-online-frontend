@@ -54,6 +54,7 @@ export default function Register({modalRegister, closeModalRegister, openModalLo
     username: 'Username is required',
     email: 'Email is required',
     password: 'Password is required',
+    passwordValidation: 'Password must contain at least one uppercase and lowercase letter, one digit, and be at least 8 characters long.',
     cpassword: 'Confirm password is required',
   };
 
@@ -165,13 +166,13 @@ export default function Register({modalRegister, closeModalRegister, openModalLo
 
                         <div className='col-span-full'>
                           <div className='relative flex items-center'>
-                            <input type={passwordVisible ? 'text' : 'password'} id='password' autoComplete='off' placeholder='Password' className='block m-0 w-full bg-[#3E3E3E] rounded-md border-0 p-1.5 text-[#D2D2D2] shadow-sm ring-1 ring-inset ring-gray-900 placeholder:text-[#D2D2D2] focus:ring-2 focus:ring-inset focus:ring-[#3E3E3E] sm:text-sm sm:leading-6' {...register('password', {required: errorMessages.password})} onChange={(e) => {handleValidatePasswordChange(e);}}/> 
+                            <input type={passwordVisible ? 'text' : 'password'} id='password' autoComplete='off' placeholder='Password' className='block m-0 w-full bg-[#3E3E3E] rounded-md border-0 p-1.5 text-[#D2D2D2] shadow-sm ring-1 ring-inset ring-gray-900 placeholder:text-[#D2D2D2] focus:ring-2 focus:ring-inset focus:ring-[#3E3E3E] sm:text-sm sm:leading-6' {...register('password', {required: errorMessages.password, pattern: {value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/, message: errorMessages.passwordValidation}})} onChange={(e) => {handleValidatePasswordChange(e);}}/> 
                             <span className={styles.eye_icon}>
                                 {<FontAwesomeIcon className='text-[#D2D2D2]' icon={passwordVisible ? 'eye-slash' : 'eye'} onClick={() => setPasswordVisible(!passwordVisible)}/>}
                             </span>
                           </div>
                           {errors.password && !watch('password') && (<p className='mt-1 text-red-500 text-left text-sm'>{errors.password.message}</p>)}
-                          {!passwordValid && (<p className='text-red-500 text-left text-sm mt-1'>Password must contain at least one uppercase and lowercase letter, one digit, and be at least 8 characters long.</p>)}
+                          {!passwordValid && (<p className='text-red-500 text-left text-sm mt-1'>{errorMessages.passwordValidation}</p>)}
                         </div>
 
                         <div className='col-span-full mb-1'>
