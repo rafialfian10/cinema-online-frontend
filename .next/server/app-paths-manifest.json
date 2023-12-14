@@ -1,10 +1,8 @@
 {
   "/page": "app/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/pages/users/my-list-movie/page": "app/pages/users/my-list-movie/page.js",
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/pages/admin/list-movie/page": "app/pages/admin/list-movie/page.js",
   "/pages/admin/list-transaction/page": "app/pages/admin/list-transaction/page.js",
   "/pages/admin/list-category/page": "app/pages/admin/list-category/page.js",
-  "/pages/users/detail-movie/[id]/page": "app/pages/users/detail-movie/[id]/page.js",
-  "/pages/users/profile-user/[id]/page": "app/pages/users/profile-user/[id]/page.js"
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/pages/admin/profile-admin/[id]/page": "app/pages/admin/profile-admin/[id]/page.js"
 }

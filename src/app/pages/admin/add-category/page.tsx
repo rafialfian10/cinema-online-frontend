@@ -78,6 +78,7 @@ function AddCategory({
         theme: "colored",
         style: { marginTop: "65px" },
       });
+      
       fetchCategories();
       setModalAddCategory(false);
       reset();

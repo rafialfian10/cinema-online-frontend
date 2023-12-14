@@ -9,16 +9,14 @@ import { useState, useEffect, useRef } from "react";
 // components redux
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { fetchCategoriess, Category } from "@/redux/features/categorySlice";
+import { deleteCategory } from "@/redux/features/categorySlice";
+// import { fetchCategoriess, Category } from "@/redux/features/categorySlice";
 
 // components
 import AddCategory from "../add-category/page";
 import UpdateCategory from "../update-category/page";
 import SearchCategory from "@/app/components/search-category/searchCategory";
 import AuthAdmin from "@/app/components/auth-admin/authAdmin";
-
-// api
-import { API } from "@/app/api/api";
 
 // types
 import { UserAuth } from "@/types/userAuth";
@@ -36,10 +34,13 @@ function ListCategory() {
   const { data: session, status } = useSession();
   const user: UserAuth | undefined = session?.user;
 
-  const userRef = useRef(false);
-
   // dispatch
   const dispatch = useDispatch<AppDispatch>();
+
+  // const userRef = useRef(false);
+
+  // dispatch
+  // const dispatch = useDispatch<AppDispatch>();
   // const { categories, loading } = useSelector((state: RootState) => state.category);
   // console.log(categories);
 
@@ -60,15 +61,15 @@ function ListCategory() {
   const [categoryFound, setCategoryFound] = useState(true);
 
   // fetch categories
-  useEffect(() => {
-    if (userRef.current === false) {
-      dispatch(fetchCategoriess());
-    }
+  // useEffect(() => {
+  //   if (userRef.current === false) {
+  //     dispatch(fetchCategoriess());
+  //   }
 
-    return () => {
-      userRef.current = true;
-    };
-  }, []);
+  //   return () => {
+  //     userRef.current = true;
+  //   };
+  // }, []);
 
   // Filtered movie
   const filteredCategories = categories.filter((category) =>
@@ -107,28 +108,21 @@ function ListCategory() {
         },
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const config = {
-            headers: {
-              "Content-type": "multipart/form-data",
-              Authorization: "Bearer " + user?.data?.token,
-            },
-          };
+          dispatch(deleteCategory({ id, session }));
 
-          const res = await API.delete(`/category/${id}`, config);
-          if (res.status === 200) {
-            toast.success("Category successfully deleted!", {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-              style: { marginTop: "65px" },
-            });
-            // fetchCategories();
-          }
+          toast.success("Category successfully deleted!", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            style: { marginTop: "65px" },
+          });
+
+          fetchCategories();
         }
       });
     } catch (e) {
@@ -165,7 +159,7 @@ function ListCategory() {
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [filteredCategories]);
 
   return (
     <section>

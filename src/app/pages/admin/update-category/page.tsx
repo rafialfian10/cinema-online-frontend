@@ -8,11 +8,13 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
+// components redux
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { updateCategory } from "@/redux/features/categorySlice";
+
 // components
 import AuthAdmin from "@/app/components/auth-admin/authAdmin";
-
-// api
-import { API } from "@/app/api/api";
 
 // types
 import { UserAuth } from "@/types/userAuth";
@@ -44,6 +46,9 @@ function UpdateCategory({
   const { data: session, status } = useSession();
   const user: UserAuth | undefined = session?.user;
 
+  // dispatch
+  const dispatch = useDispatch<AppDispatch>();  
+
   useEffect(() => {
     if (modalUpdateCategory) {
       fetchCategories();
@@ -60,7 +65,6 @@ function UpdateCategory({
     register,
     handleSubmit,
     reset,
-    watch,
     setValue,
     control,
     formState: { errors },
@@ -73,38 +77,27 @@ function UpdateCategory({
   }, [dataCategory, setValue]);
 
   const onSubmit: SubmitHandler<CategoryValues> = async (data) => {
-    const config = {
-      headers: {
-        "Content-type": "multipart/form-data",
-        Authorization: "Bearer " + user?.data?.token,
-      },
-    };
-
     const formData = new FormData();
     formData.append("name", data?.name);
 
     try {
-      const res = await API.patch(
-        `/category/${dataCategory?.id}`,
-        formData,
-        config
-      );
-      if (res.status === 200) {
-        toast.success("Category successfully updated!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          style: { marginTop: "65px" },
-        });
-        setModalUpdateCategory(false);
-        fetchCategories();
-        reset();
-      }
+      dispatch(updateCategory({ formData, id: dataCategory?.id, session }));
+
+      toast.success("Category successfully updated!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        style: { marginTop: "65px" },
+      });
+
+      setModalUpdateCategory(false);
+      fetchCategories();
+      reset();
     } catch (e) {
       console.log("API Error:", e);
       toast.error("Category failed updated!", {

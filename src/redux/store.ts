@@ -3,13 +3,13 @@ import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux";
 
 // features redux
-import categorySlice from "./features/categorySlice";
 // import { authSlice } from './features/authSlice';
+import categorySlice from "./features/categorySlice";
 
 export const store = configureStore({
   reducer: {
-    category: categorySlice,
     // auth: authSlice.reducer,
+    category: categorySlice,
   },
 });
 
