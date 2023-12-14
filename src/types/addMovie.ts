@@ -1,5 +1,5 @@
 export type AddMovieValues = {
-  id: number
+  id: number;
   title: string;
   releaseDate: string;
   category: number[];

@@ -1,4 +1,10 @@
 {
   "/page": "app/page.js",
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js"
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/pages/users/my-list-movie/page": "app/pages/users/my-list-movie/page.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/pages/admin/list-transaction/page": "app/pages/admin/list-transaction/page.js",
+  "/pages/admin/list-category/page": "app/pages/admin/list-category/page.js",
+  "/pages/users/detail-movie/[id]/page": "app/pages/users/detail-movie/[id]/page.js",
+  "/pages/users/profile-user/[id]/page": "app/pages/users/profile-user/[id]/page.js"
 }

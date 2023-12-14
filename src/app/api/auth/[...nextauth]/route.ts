@@ -1,14 +1,14 @@
 // components next auth
 // import NextAuth from 'next-auth';
-import NextAuth, { AuthOptions } from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
+import NextAuth, { AuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 // github provider
-import GitHubProvider from 'next-auth/providers/github';
-import { GithubProfile } from 'next-auth/providers/github';
+import GitHubProvider from "next-auth/providers/github";
+import { GithubProfile } from "next-auth/providers/github";
 
 // api
-import { API } from '../../api';
+import { API } from "../../api";
 // ----------------------------------------
 
 export const Options: AuthOptions = {
@@ -21,58 +21,70 @@ export const Options: AuthOptions = {
           role: profile.role ?? "user",
           id: profile.id.toString(),
           image: profile.avatar_url,
-        }
+        };
       },
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
     }),
     CredentialsProvider({
-      name: 'credentials',
+      name: "credentials",
       credentials: {
-        email: {label: 'Email', type: 'email', placeholder: 'Email....'},
-        password: {label: 'Password', type: 'password', placeholder: 'Password....'},
+        email: { label: "Email", type: "email", placeholder: "Email...." },
+        password: {
+          label: "Password",
+          type: "password",
+          placeholder: "Password....",
+        },
       },
       async authorize(credentials) {
-        if(!credentials?.email || !credentials.password) {
-          return null
+        if (!credentials?.email || !credentials.password) {
+          return null;
         }
 
         try {
-          const res = await API.post('/login', {
+          const res = await API.post("/login", {
             email: credentials.email,
-            password: credentials.password
+            password: credentials.password,
           });
 
           if (res.data.status === 200) {
             const user = res.data;
             return user;
-          } 
+          }
         } catch (error) {
           return null; // if password wrong
         }
-      }
-    })
+      },
+    }),
   ],
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }: { token: any, user: any }) {
+    async jwt({ token, user }: { token: any; user: any }) {
       // console.log(token); // return all data & status from api
       return { ...token, ...user };
     },
     // client component
-    async session({ session, token, user }: { session: any, token: any, user: any }) {
-      session.user = token as any; // return all data & status from api  
+    async session({
+      session,
+      token,
+      user,
+    }: {
+      session: any;
+      token: any;
+      user: any;
+    }) {
+      session.user = token as any; // return all data & status from api
       return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV === 'development',
-}
+  debug: process.env.NODE_ENV === "development",
+};
 
-const handler = NextAuth(Options)
-export { handler as GET, handler as POST }
+const handler = NextAuth(Options);
+export { handler as GET, handler as POST };
 
 // strategy = 'jwt' berfungsi mengatur strategi sesi yang digunakan oleh NextAuth. Di sini, strategi yang digunakan adalah 'jwt' atau JSON Web Token. JSON Web Token (JWT) adalah metode untuk mentransmisikan informasi terenkripsi antara pihak yang berpartisipasi dalam bentuk token. Dengan menggunakan JWT, Anda dapat mengelola sesi pengguna secara aman dan efisien.
 

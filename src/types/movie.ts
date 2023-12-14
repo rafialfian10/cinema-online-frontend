@@ -13,5 +13,5 @@ export type MovieValues = {
     star: number;
     movie_id: number;
     user_id: number;
-  }
+  };
 };

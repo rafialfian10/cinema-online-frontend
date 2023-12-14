@@ -1,25 +1,23 @@
 .swal2-popup {
-    background-color: #0D0D0D;
+  background-color: #0d0d0d;
 }
 
 .swal2-title {
-  color: #D2D2D2;
+  color: #d2d2d2;
 }
 
 .swal2-icon {
-  color: #D2D2D2;
+  color: #d2d2d2;
 }
 
 .swal2-confirm {
-  background-color: #3E3E3E;
+  background-color: #3e3e3e;
   color: #fff;
   min-width: 80px !important;
 }
 
 .swal2-cancel {
-  background-color: #CD2E71;
+  background-color: #cd2e71;
   color: #fff;
   min-width: 80px !important;
 }
-  
-  

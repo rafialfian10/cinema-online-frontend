@@ -1,50 +1,66 @@
-'use client';
+"use client";
 
 // components next
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 // components react
-import React, { Suspense } from 'react';
+import React, { Suspense } from "react";
 
 // components
-import DinamicImage from '../dinamic-image/dinamicImage';
+import DinamicImage from "../dinamic-image/dinamicImage";
 
 // css
-import './card-movie.module.css';
+import "./card-movie.module.css";
 // ----------------------------------------------------------
 
 // perbedaan penggunaan interface dan type ada dibawah penjelasannya
 // type CurrentMovieProps = {
-  // currentMovies: any;
+// currentMovies: any;
 // }
 
 interface CurrentMovieProps {
   currentMovies: any;
 }
-  
+
 export default function CardMovie({ currentMovies }: CurrentMovieProps) {
   const router = useRouter();
 
   return (
     <React.Fragment>
-      <div className='w-full mt-16 px-4 md:px-10 lg:px-20 pb-10'>
-        <p className='w-full mb-5 font-bold text-2xl text-[#D2D2D2]'>List Movie</p> 
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-1'>
+      <div className="w-full mt-16 px-4 md:px-10 lg:px-20 pb-10">
+        <p className="w-full mb-5 font-bold text-2xl text-[#D2D2D2]">
+          List Movie
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-1">
           {currentMovies?.map((movie: any, i: number) => {
             return (
-              <div className='w-30% flex flex-col justify-between rounded-md bg-[#0D0D0D] overflow-hidden' key={i}>
-                <div className='w-full h-52'>
+              <div
+                className="w-30% flex flex-col justify-between rounded-md bg-[#0D0D0D] overflow-hidden"
+                key={i}
+              >
+                <div className="w-full h-52">
                   <DinamicImage movie={movie} />
                 </div>
-  
-                <div className='p-5'>
-                  <button type='button' className='inline-flex items-center py-2 text-xl font-medium text-center text-[#D2D2D2] rounded-md hover:opacity-80' onClick={() => router.push(`/pages/users/detail-movie/${movie?.id}`)}>{movie?.title}</button>
-                  <p className='mb-3 font-normal text-[#D2D2D2] dark:text-[#D2D2D2]'>{ movie?.description.length > 100 ? `${movie?.description.substring(0, 100)}...` : movie?.description }</p>
+
+                <div className="p-5">
+                  <button
+                    type="button"
+                    className="inline-flex items-center py-2 text-xl font-medium text-center text-[#D2D2D2] rounded-md hover:opacity-80"
+                    onClick={() =>
+                      router.push(`/pages/users/detail-movie/${movie?.id}`)
+                    }
+                  >
+                    {movie?.title}
+                  </button>
+                  <p className="mb-3 font-normal text-[#D2D2D2] dark:text-[#D2D2D2]">
+                    {movie?.description.length > 100
+                      ? `${movie?.description.substring(0, 100)}...`
+                      : movie?.description}
+                  </p>
                 </div>
               </div>
-              )
-            })
-          }
+            );
+          })}
         </div>
       </div>
     </React.Fragment>
@@ -81,7 +97,3 @@ Ketika datang ke proyek yang lebih kompleks, banyak pengembang memilih untuk men
 Meskipun interface umumnya lebih disukai dalam proyek yang kompleks, type juga memiliki kegunaan yang kuat, terutama ketika Anda perlu mendefinisikan tipe yang lebih fleksibel atau kompleks seperti union, intersection, atau conditional types.
 
 Intinya, baik type maupun interface memiliki tempat mereka masing-masing dalam proyek. Anda bisa memilih sesuai dengan kebutuhan dan preferensi tim Anda. Jika proyek Anda sudah memiliki konvensi atau standar, pastikan untuk mengikuti panduan tersebut untuk menjaga konsistensi dalam kode. */
-
-
-
-

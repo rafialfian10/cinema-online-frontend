@@ -1,16 +1,19 @@
 // components redux
-import { configureStore } from '@reduxjs/toolkit';
-import { useSelector, TypedUseSelectorHook } from 'react-redux';
+import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux";
 
-// components
-import authSlice from './features/authSlice';
+// features redux
+import categorySlice from "./features/categorySlice";
+// import { authSlice } from './features/authSlice';
 
 export const store = configureStore({
-    reducer: {
-        authSlice: authSlice,
-    },
+  reducer: {
+    category: categorySlice,
+    // auth: authSlice.reducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-export const useAppSelector : TypedUseSelectorHook<RootState> = useSelector;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+// export const useAppDispatch: () => typeof store.dispatch = useDispatch;

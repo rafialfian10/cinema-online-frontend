@@ -1,5 +1,5 @@
 export type RatingValues = {
-    star: number;
-    movieId: number;
-    userId: number;
+  star: number;
+  movieId: number;
+  userId: number;
 };
