@@ -17,7 +17,7 @@ import Swipers from "./components/swiper/swiper";
 import { UserAuth } from "@/types/userAuth";
 
 // libs
-import { getMovies } from "@/libs/movies";
+import { getMovies } from "@/libs/movie";
 //---------------------------------------------------------------
 
 export default async function Home({

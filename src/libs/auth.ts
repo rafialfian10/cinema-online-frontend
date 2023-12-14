@@ -1,4 +1,4 @@
-import { wait } from "./movies";
+import { wait } from "./movie";
 
 export default async function checkAuth() {
   const response = await fetch("http://localhost:5000/api/v1/check_auth", {

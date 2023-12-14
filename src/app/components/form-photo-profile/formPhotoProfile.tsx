@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useState, useEffect, Suspense } from "react";
 
 // component
-import { getUser } from "@/libs/users";
+import { getUser } from "@/libs/user";
 
 // api
 import { API } from "@/app/api/api";

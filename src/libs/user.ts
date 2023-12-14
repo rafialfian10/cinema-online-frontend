@@ -1,4 +1,4 @@
-import { wait } from "./movies";
+import { wait } from "./movie";
 
 export default async function getUsers() {
   const response = await fetch("http://localhost:5000/api/v1/users", {
@@ -19,7 +19,7 @@ export async function getUser(id: number) {
   });
 
   if (!response.ok) {
-    throw new Error("failed to fetch users");
+    throw new Error("failed to fetch user");
   }
 
   await wait(1000);
