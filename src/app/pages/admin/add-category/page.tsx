@@ -32,14 +32,12 @@ export interface AddCategoryProps {
   modalAddCategory: boolean;
   setModalAddCategory: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAddcategory: () => void;
-  fetchCategories: () => void;
 }
 
 function AddCategory({
   modalAddCategory,
   setModalAddCategory,
   closeModalAddcategory,
-  fetchCategories,
 }: AddCategoryProps) {
   const { data: session, status } = useSession();
   const user: UserAuth | undefined = session?.user;
@@ -65,23 +63,24 @@ function AddCategory({
     formData.append("name", data?.name);
 
     try {
-      dispatch(createCategory({ formData, session }));
+      const response = await dispatch(createCategory({ formData, session }));
 
-      toast.success("Category successfully added!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        style: { marginTop: "65px" },
-      });
-      
-      fetchCategories();
-      setModalAddCategory(false);
-      reset();
+      if (response.payload && response.payload.status === 200) {
+        toast.success("Category successfully added!", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          style: { marginTop: "65px" },
+        });
+
+        setModalAddCategory(false);
+        reset();
+      }
     } catch (e) {
       console.log("API Error:", e);
       toast.error("Category failed added!", {

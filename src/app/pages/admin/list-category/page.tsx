@@ -4,13 +4,15 @@
 import { useSession } from "next-auth/react";
 
 // components react
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 // components redux
-import { useSelector, useDispatch } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store";
-import { deleteCategory } from "@/redux/features/categorySlice";
-// import { fetchCategoriess, Category } from "@/redux/features/categorySlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch, RootState, useAppSelector } from "@/redux/store";
+import {
+  fetchCategories,
+  deleteCategory,
+} from "@/redux/features/categorySlice";
 
 // components
 import AddCategory from "../add-category/page";
@@ -37,15 +39,16 @@ function ListCategory() {
   // dispatch
   const dispatch = useDispatch<AppDispatch>();
 
-  // const userRef = useRef(false);
+  const categories = useAppSelector(
+    (state: RootState) => state.categorySlice.categories
+  );
+  const loading = useAppSelector(
+    (state: RootState) => state.categorySlice.loading
+  );
 
-  // dispatch
-  // const dispatch = useDispatch<AppDispatch>();
-  // const { categories, loading } = useSelector((state: RootState) => state.category);
-  // console.log(categories);
-
-  // state categories
-  const [categories, setCategories] = useState<any[]>([]);
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch, categories]);
 
   // state data category
   const [dataCategory, setDataCategory] = useState<any>();
@@ -57,36 +60,23 @@ function ListCategory() {
   // State search
   const [search, setSearch] = useState("");
 
-  // state movie found
+  // state category found
   const [categoryFound, setCategoryFound] = useState(true);
 
-  // fetch categories
-  // useEffect(() => {
-  //   if (userRef.current === false) {
-  //     dispatch(fetchCategoriess());
-  //   }
-
-  //   return () => {
-  //     userRef.current = true;
-  //   };
-  // }, []);
-
-  // Filtered movie
-  const filteredCategories = categories.filter((category) =>
-    category?.name.toLowerCase().includes(search.toLowerCase())
+  // Filtered category
+  const filteredCategories = categories.filter(
+    (category) =>
+      category?.name &&
+      category.name.toLowerCase().includes(search.toLowerCase())
   );
 
   // function close modal add & update categories
   function closeModalAddcategory() {
     setModalAddCategory(false);
-    fetchCategories();
-    // dispatch(fetchCategoriess());
   }
 
   function closeModalUpdatecategory() {
     setModalUpdateCategory(false);
-    fetchCategories();
-    // dispatch(fetchCategoriess());
   }
 
   // handle delete category
@@ -108,21 +98,21 @@ function ListCategory() {
         },
       }).then(async (result) => {
         if (result.isConfirmed) {
-          dispatch(deleteCategory({ id, session }));
+          const response = await dispatch(deleteCategory({ id, session }));
 
-          toast.success("Category successfully deleted!", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            style: { marginTop: "65px" },
-          });
-
-          fetchCategories();
+          if (response.payload && response.payload.status === 200) {
+            toast.success("Category successfully deleted!", {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+              style: { marginTop: "65px" },
+            });
+          }
         }
       });
     } catch (e) {
@@ -147,19 +137,9 @@ function ListCategory() {
     setCategoryFound(true);
   };
 
-  // fetch data categories
-  async function fetchCategories() {
-    try {
-      const moviesData = await getAllCategories();
-      setCategories(moviesData.data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  }
-
-  useEffect(() => {
-    fetchCategories();
-  }, [filteredCategories]);
+  // useEffect(() => {
+  //   dispatch(fetchCategories());
+  // }, [filteredCategories]);
 
   return (
     <section>
@@ -167,13 +147,11 @@ function ListCategory() {
         modalAddCategory={modalAddCategory}
         setModalAddCategory={setModalAddCategory}
         closeModalAddcategory={closeModalAddcategory}
-        fetchCategories={fetchCategories}
       />
       <UpdateCategory
         modalUpdateCategory={modalUpdateCategory}
         setModalUpdateCategory={setModalUpdateCategory}
         closeModalUpdatecategory={closeModalUpdatecategory}
-        fetchCategories={fetchCategories}
         dataCategory={dataCategory}
       />
       <div className="w-full mt-20 px-4 md:px-10 lg:px-20 pb-10">

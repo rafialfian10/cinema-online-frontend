@@ -32,7 +32,6 @@ export interface UpdateCategoryProps {
   modalUpdateCategory: boolean;
   setModalUpdateCategory: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalUpdatecategory: () => void;
-  fetchCategories: () => void;
   dataCategory: any;
 }
 
@@ -40,20 +39,13 @@ function UpdateCategory({
   modalUpdateCategory,
   setModalUpdateCategory,
   closeModalUpdatecategory,
-  fetchCategories,
   dataCategory,
 }: UpdateCategoryProps) {
   const { data: session, status } = useSession();
   const user: UserAuth | undefined = session?.user;
 
   // dispatch
-  const dispatch = useDispatch<AppDispatch>();  
-
-  useEffect(() => {
-    if (modalUpdateCategory) {
-      fetchCategories();
-    }
-  }, [modalUpdateCategory, dataCategory]);
+  const dispatch = useDispatch<AppDispatch>();
 
   // error message
   const errorMessages = {
@@ -81,23 +73,26 @@ function UpdateCategory({
     formData.append("name", data?.name);
 
     try {
-      dispatch(updateCategory({ formData, id: dataCategory?.id, session }));
+      const response = await dispatch(
+        updateCategory({ formData, id: dataCategory?.id, session })
+      );
 
-      toast.success("Category successfully updated!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        style: { marginTop: "65px" },
-      });
+      if (response.payload && response.payload.status === 200) {
+        toast.success("Category successfully updated!", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          style: { marginTop: "65px" },
+        });
 
-      setModalUpdateCategory(false);
-      fetchCategories();
-      reset();
+        setModalUpdateCategory(false);
+        reset();
+      }
     } catch (e) {
       console.log("API Error:", e);
       toast.error("Category failed updated!", {
