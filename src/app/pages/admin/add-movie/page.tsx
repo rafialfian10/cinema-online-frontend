@@ -15,8 +15,8 @@ import AuthAdmin from "@/app/components/auth-admin/authAdmin";
 import { API } from "@/app/api/api";
 
 // types
-import { AddMovieValues } from "@/types/addMovie";
 import { UserAuth } from "@/types/userAuth";
+import { AddMovieValues } from "@/types/addMovie";
 
 // alert
 import { toast } from "react-toastify";
