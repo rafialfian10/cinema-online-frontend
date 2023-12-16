@@ -100,7 +100,7 @@ export const deleteMovie = createAsyncThunk(
     };
 
     try {
-      const response = await API.delete(`/movie/1000`, config);
+      const response = await API.delete(`/movie/${id}`, config);
 
       if (response.status === 200) {
         const result = await response.data;

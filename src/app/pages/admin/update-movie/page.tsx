@@ -9,6 +9,11 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
+// components redux
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { updateMovie } from "@/redux/features/movieSlice";
+
 // components
 import AuthAdmin from "@/app/components/auth-admin/authAdmin";
 
@@ -41,11 +46,13 @@ function UpdateMovie({
   setModalUpdateMovie,
   closeModalUpdateMovie,
   dataMovie,
-  fetchMovies,
 }: UpdateMovieProps) {
   // session
   const { data: session, status } = useSession();
   const user: UserAuth | undefined = session?.user;
+
+  // dispatch
+  const dispatch = useDispatch<AppDispatch>();
 
   // state categories
   const [categories, setCategories] = useState<any[]>([]);
@@ -62,7 +69,6 @@ function UpdateMovie({
 
   useEffect(() => {
     if (modalUpdateMovie) {
-      fetchMovies();
       fetchCategories();
     }
   }, [modalUpdateMovie, dataMovie]);
@@ -116,14 +122,6 @@ function UpdateMovie({
   }, [dataMovie, setValue]);
 
   const onSubmit: SubmitHandler<AddMovieValues> = async (data) => {
-    // console.log('data', data);
-    const config = {
-      headers: {
-        "Content-type": "multipart/form-data",
-        Authorization: "Bearer " + user?.data?.token,
-      },
-    };
-
     const formData = new FormData();
     formData.append("title", data?.title);
     formData.append("release_date", data?.releaseDate);
@@ -137,8 +135,11 @@ function UpdateMovie({
     formData.append("full_movie", data.fullMovie[0]);
 
     try {
-      const res = await API.patch(`/movie/${dataMovie?.id}`, formData, config);
-      if (res.status === 200) {
+      const response = await dispatch(
+        updateMovie({ formData, id: dataMovie?.id, session })
+      );
+
+      if (response.payload && response.payload.status === 200) {
         toast.success("Movie successfully updated!", {
           position: "top-right",
           autoClose: 2000,
@@ -150,8 +151,8 @@ function UpdateMovie({
           theme: "colored",
           style: { marginTop: "65px" },
         });
+
         setModalUpdateMovie(false);
-        fetchMovies();
         reset();
       }
     } catch (e) {
@@ -217,7 +218,6 @@ function UpdateMovie({
               style: { marginTop: "65px" },
             });
             setModalUpdateMovie(false);
-            fetchMovies();
           }
         }
       });
@@ -280,7 +280,6 @@ function UpdateMovie({
               style: { marginTop: "65px" },
             });
             setModalUpdateMovie(false);
-            fetchMovies();
           }
         }
       });
@@ -343,7 +342,6 @@ function UpdateMovie({
               style: { marginTop: "65px" },
             });
             setModalUpdateMovie(false);
-            fetchMovies();
           }
         }
       });

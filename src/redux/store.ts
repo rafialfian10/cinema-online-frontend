@@ -6,12 +6,16 @@ import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux";
 // import { authSlice } from './features/authSlice';
 import categorySlice from "./features/categorySlice";
 import movieSlice from "./features/movieSlice";
+import userSlice from "./features/userSlice.";
+import transactionSlice from "./features/transactionSlice";
 
 export const store = configureStore({
   reducer: {
     // auth: authSlice.reducer,
+    userSlice: userSlice,
     movieSlice: movieSlice,
     categorySlice: categorySlice,
+    transactionSlice: transactionSlice,
   },
 });
 

@@ -343,7 +343,7 @@ function UpdateTransaction({
                             scope="col"
                             className="px-2 py-4 text-[#D2D2D2] text-center"
                           >
-                            {dataTransaction?.buyer?.category}
+                            {dataTransaction?.buyer?.category} -
                           </td>
                           <td
                             scope="col"

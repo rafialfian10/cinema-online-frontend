@@ -100,7 +100,7 @@ export const deleteCategory = createAsyncThunk(
     };
 
     try {
-      const response = await API.delete(`/category/1000`, config);
+      const response = await API.delete(`/category/${id}`, config);
 
       if (response.status === 200) {
         const result = await response.data;

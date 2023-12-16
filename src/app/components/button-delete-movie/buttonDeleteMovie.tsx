@@ -6,8 +6,10 @@ import { useSession } from "next-auth/react";
 // component react
 import { Menu } from "@headlessui/react";
 
-// api
-import { API } from "@/app/api/api";
+// components redux
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { deleteMovie } from "@/redux/features/movieSlice";
 
 // types
 import { UserAuth } from "@/types/userAuth";
@@ -23,7 +25,6 @@ import styles from "./button-delete-movie.module.css";
 
 interface MovieIdProps {
   movieId: number;
-  fetchMovies: () => void;
 }
 
 function classNames(...classes: any) {
@@ -32,10 +33,12 @@ function classNames(...classes: any) {
 
 export default function ButtonDeleteMovie({
   movieId,
-  fetchMovies,
 }: MovieIdProps) {
   const { data: session, status } = useSession();
   const user: UserAuth | undefined = session?.user;
+
+  // dispatch
+  const dispatch = useDispatch<AppDispatch>();
 
   // handle delete movie
   const handleDeleteMovie = async (id: number) => {
@@ -56,15 +59,9 @@ export default function ButtonDeleteMovie({
         },
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const config = {
-            headers: {
-              "Content-type": "multipart/form-data",
-              Authorization: "Bearer " + user?.data?.token,
-            },
-          };
+          const response = await dispatch(deleteMovie({ id, session }));
 
-          const res = await API.delete(`/movie/${id}`, config);
-          if (res.status === 200) {
+          if (response.payload && response.payload.status === 200) {
             toast.success("Movie successfully deleted!", {
               position: "top-right",
               autoClose: 3500,
@@ -76,7 +73,6 @@ export default function ButtonDeleteMovie({
               theme: "colored",
               style: { marginTop: "65px" },
             });
-            fetchMovies();
           }
         }
       });

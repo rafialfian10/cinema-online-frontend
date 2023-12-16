@@ -6,7 +6,7 @@ export type ProfileValues = {
   gender: string;
   phone: string;
   address: string;
-  photo: File;
+  photo: File | string;
   role: string;
   premi: {
     id: number;

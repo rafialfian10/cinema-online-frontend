@@ -20,9 +20,6 @@ import UpdateCategory from "../update-category/page";
 import SearchCategory from "@/app/components/search-category/searchCategory";
 import AuthAdmin from "@/app/components/auth-admin/authAdmin";
 
-// types
-import { UserAuth } from "@/types/userAuth";
-
 // alert
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
@@ -34,7 +31,6 @@ import styles from "./list-category.module.css";
 
 function ListCategory() {
   const { data: session, status } = useSession();
-  const user: UserAuth | undefined = session?.user;
 
   // dispatch
   const dispatch = useDispatch<AppDispatch>();
@@ -42,6 +38,7 @@ function ListCategory() {
   const categories = useAppSelector(
     (state: RootState) => state.categorySlice.categories
   );
+  
   const loading = useAppSelector(
     (state: RootState) => state.categorySlice.loading
   );
@@ -65,7 +62,7 @@ function ListCategory() {
 
   // Filtered category
   const filteredCategories = categories.filter(
-    (category) =>
+    (category: any) =>
       category?.name &&
       category.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -287,14 +284,3 @@ function ListCategory() {
 }
 
 export default AuthAdmin(ListCategory);
-
-async function getAllCategories() {
-  const response = await fetch("http://localhost:5000/api/v1/categories", {
-    cache: "no-cache",
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  return await response.json();
-}

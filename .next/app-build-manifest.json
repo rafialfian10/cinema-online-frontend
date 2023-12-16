@@ -1,21 +1,15 @@
 {
   "pages": {
-    "/page": [
+    "/error": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/page.css",
-      "static/chunks/app/page.js"
+      "static/chunks/app/error.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
-    ],
-    "/error": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/error.js"
     ],
     "/loading": [
       "static/chunks/webpack.js",
@@ -27,17 +21,23 @@
       "static/chunks/main-app.js",
       "static/chunks/app/not-found.js"
     ],
-    "/pages/admin/list-category/page": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/pages/admin/list-category/page.css",
-      "static/chunks/app/pages/admin/list-category/page.js"
+      "static/css/app/page.css",
+      "static/chunks/app/page.js"
     ],
-    "/pages/admin/list-movie/page": [
+    "/pages/admin/profile-admin/[id]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/pages/admin/list-movie/page.css",
-      "static/chunks/app/pages/admin/list-movie/page.js"
+      "static/css/app/pages/admin/profile-admin/[id]/page.css",
+      "static/chunks/app/pages/admin/profile-admin/[id]/page.js"
+    ],
+    "/pages/users/profile-user/[id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/pages/users/profile-user/[id]/page.css",
+      "static/chunks/app/pages/users/profile-user/[id]/page.js"
     ]
   }
 }

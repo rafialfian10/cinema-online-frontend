@@ -8,6 +8,11 @@ import Link from "next/link";
 import { Fragment, useState, useEffect } from "react";
 import { Menu, Transition } from "@headlessui/react";
 
+// components redux
+import { useDispatch } from "react-redux";
+import { AppDispatch, RootState, useAppSelector } from "@/redux/store";
+import { fetchMovies } from "@/redux/features/movieSlice";
+
 // components
 import UpdateMovie from "../update-movie/page";
 import SearchMovie from "@/app/components/search-movie/searchMovie";
@@ -20,8 +25,17 @@ import list from "@/assets/img/titik3.png";
 // ----------------------------------------------------------
 
 function ListMovie() {
-  // state movies
-  const [movies, setMovies] = useState<any[]>([]);
+  // dispatch
+  const dispatch = useDispatch<AppDispatch>();
+
+  const movies = useAppSelector((state: RootState) => state.movieSlice.movies);
+  const loading = useAppSelector(
+    (state: RootState) => state.movieSlice.loading
+  );
+
+  useEffect(() => {
+    dispatch(fetchMovies());
+  }, [dispatch, movies]);
 
   // state data movie
   const [dataMovie, setDataMovie] = useState<any>();
@@ -34,20 +48,6 @@ function ListMovie() {
 
   // state movie found
   const [moviesFound, setMoviesFound] = useState(true);
-
-  // fetch data movies
-  async function fetchMovies() {
-    try {
-      const moviesData = await getAllMovies();
-      setMovies(moviesData.data);
-    } catch (error) {
-      console.error("Error fetching movies:", error);
-    }
-  }
-
-  useEffect(() => {
-    fetchMovies();
-  }, []);
 
   // function close modal update movie
   function closeModalUpdateMovie() {
@@ -62,8 +62,10 @@ function ListMovie() {
   };
 
   // Filtered movie
-  const filteredMovies = movies.filter((movie) =>
-    movie?.title.toLowerCase().includes(search.toLowerCase())
+  const filteredMovies = movies.filter(
+    (movie: any) =>
+      movie?.title &&
+      movie.title.toLowerCase().includes(search.toLowerCase())
   );
 
   useEffect(() => {
@@ -81,7 +83,6 @@ function ListMovie() {
         setModalUpdateMovie={setModalUpdateMovie}
         closeModalUpdateMovie={closeModalUpdateMovie}
         dataMovie={dataMovie}
-        fetchMovies={fetchMovies}
       />
       <div className="w-full mt-20 px-4 md:px-10 lg:px-20 pb-10">
         <SearchMovie search={search} handleSearchMovie={handleSearchMovie} />
@@ -138,7 +139,6 @@ function ListMovie() {
                           />
                           <ButtonDeleteMovie
                             movieId={movie?.id}
-                            fetchMovies={fetchMovies}
                           />
                         </div>
                       </Menu.Items>
@@ -203,15 +203,3 @@ function ListMovie() {
 }
 
 export default AuthAdmin(ListMovie);
-
-async function getAllMovies() {
-  const response = await fetch("http://localhost:5000/api/v1/movies", {
-    cache: "no-cache",
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return await response.json();
-}

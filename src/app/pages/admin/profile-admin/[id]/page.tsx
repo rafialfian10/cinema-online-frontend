@@ -5,15 +5,20 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 
 // components react
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import moment from "moment";
+
+// components redux
+import { useDispatch } from "react-redux";
+import { AppDispatch, RootState, useAppSelector } from "@/redux/store";
+import {
+  fetchUserAuth,
+  updateUser,
+  updateUserPhoto,
+} from "@/redux/features/userSlice.";
 
 // components
 import AuthAdmin from "@/app/components/auth-admin/authAdmin";
-
-// api
-import { API } from "@/app/api/api";
 
 // types
 import { UserAuth } from "@/types/userAuth";
@@ -38,75 +43,17 @@ function ProfileAdmin({ params }: ProfileProps) {
   const { data: session, status } = useSession();
   const userAuth: UserAuth | undefined = session?.user;
 
-  // state user
-  const [user, setUser] = useState<any>();
+  // dispatch
+  const dispatch = useDispatch<AppDispatch>();
 
-  // state transactions
-  const [transactions, setTransactions] = useState<any[]>([]);
-
-  // fetch user
-  async function fetchUserAuth() {
-    if (status === "authenticated" && userAuth?.data?.token) {
-      const config = {
-        headers: {
-          "Content-type": "multipart/form-data",
-          Authorization: "Bearer " + userAuth?.data?.token,
-        },
-      };
-
-      try {
-        const response = await fetch(`http://localhost:5000/api/v1/user`, {
-          cache: "no-store",
-          headers: config.headers,
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch user auth");
-        }
-
-        const userData = await response.json();
-        setUser(userData.data);
-      } catch (error) {
-        console.error("Error fetching user auth:", error);
-      }
-    }
-  }
-
-  // fetch transaction
-  async function fetchTransaction() {
-    if (status === "authenticated" && userAuth?.data?.token) {
-      const config = {
-        headers: {
-          "Content-type": "multipart/form-data",
-          Authorization: "Bearer " + userAuth?.data?.token,
-        },
-      };
-
-      try {
-        const response = await fetch(
-          `http://localhost:5000/api/v1/transactions_by_user`,
-          {
-            cache: "no-store",
-            headers: config.headers,
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch transactions");
-        }
-
-        const transactionsData = await response.json();
-        setTransactions(transactionsData.data);
-      } catch (error) {
-        console.error("Error fetching transactions:", error);
-      }
-    }
-  }
+  const user = useAppSelector((state: RootState) => state.userSlice.user);
+  const loading = useAppSelector((state: RootState) => state.userSlice.loading);
 
   useEffect(() => {
-    fetchUserAuth();
-    fetchTransaction();
-  }, [session]);
+    if (status === "authenticated" && userAuth?.data?.token) {
+      dispatch(fetchUserAuth({ session, status }));
+    }
+  }, [dispatch, user, session, status, userAuth?.data?.token]);
 
   // error message
   const errorMessages = {
@@ -135,14 +82,6 @@ function ProfileAdmin({ params }: ProfileProps) {
   }, [user, setValue]);
 
   const onSubmit: SubmitHandler<CheckAuthValues> = async (data) => {
-    // console.log('data', data);
-    const config = {
-      headers: {
-        "Content-type": "multipart/form-data",
-        Authorization: "Bearer " + userAuth?.data?.token,
-      },
-    };
-
     const formData = new FormData();
     formData.append("username", data?.username);
     formData.append("email", data?.email);
@@ -151,8 +90,11 @@ function ProfileAdmin({ params }: ProfileProps) {
     formData.append("address", data?.address);
 
     try {
-      const res = await API.patch(`/user/${user?.id}`, formData, config);
-      if (res.status === 200) {
+      const response = await dispatch(
+        updateUser({ formData, id: user?.id, session })
+      );
+
+      if (response.payload && response.payload.status === 200) {
         toast.success("Profile successfully updated!", {
           position: "top-right",
           autoClose: 2000,
@@ -164,7 +106,6 @@ function ProfileAdmin({ params }: ProfileProps) {
           theme: "colored",
           style: { marginTop: "65px" },
         });
-        fetchUserAuth();
       }
     } catch (e) {
       console.log("API Error:", e);
@@ -187,19 +128,15 @@ function ProfileAdmin({ params }: ProfileProps) {
     const selectedFile = event.target.files && event.target.files[0];
 
     if (selectedFile) {
-      const config = {
-        headers: {
-          "Content-type": "multipart/form-data",
-          Authorization: "Bearer " + userAuth?.data?.token,
-        },
-      };
-
       const formData = new FormData();
       formData.append("photo", selectedFile);
 
       try {
-        const res = await API.patch(`/user/${user?.id}`, formData, config);
-        if (res.status === 200) {
+        const response = await dispatch(
+          updateUserPhoto({ formData, id: user?.id, session })
+        );
+
+        if (response.payload && response.payload.status === 200) {
           toast.success("Photo successfully updated!", {
             position: "top-right",
             autoClose: 2000,
@@ -211,7 +148,6 @@ function ProfileAdmin({ params }: ProfileProps) {
             theme: "colored",
             style: { marginTop: "65px" },
           });
-          fetchUserAuth();
         }
       } catch (e) {
         console.log("API Error:", e);
@@ -242,25 +178,26 @@ function ProfileAdmin({ params }: ProfileProps) {
           <div className="w-full flex flex-row">
             <div className="w-1/2 flex flex-col mr-5">
               <form encType="multipart/form-data">
-                {user &&
-                user?.photo !== "http://localhost:5000/uploads/photo/" ? (
+                {user && user?.photo && user?.photo !== "http://localhost:5000/uploads/photo/" ? (
                   <Image
                     src={user?.photo}
                     alt="photo-profile"
                     width={300}
-                    height={0}
-                    layout="responsive"
-                    className="h-300 rounded-md shadow-md shadow-gray-700"
+                    height={300}
+                    // layout="responsive"
+                    // objectFit="cover"
+                    className="rounded-md shadow-md shadow-gray-700"
                     priority={true}
                   />
                 ) : (
                   <Image
                     src={defaultPhoto}
-                    alt="photo-profile"
+                    alt="photo-profile-default"
                     width={300}
-                    height={0}
-                    layout="responsive"
-                    className="h-300 rounded-md shadow-md shadow-gray-700"
+                    height={300}
+                    // layout="responsive"
+                    // objectFit="cover"
+                    className="rounded-md shadow-md shadow-gray-700"
                     priority={true}
                   />
                 )}
@@ -427,59 +364,6 @@ function ProfileAdmin({ params }: ProfileProps) {
                   </div>
                 </div>
               </form>
-            </div>
-          </div>
-
-          <div className="w-full max-md:mt-10">
-            <div className="overflow-y-auto" style={{ height: "70vh" }}>
-              {transactions?.map((transaction, i) => {
-                return (
-                  <div
-                    className="mb-5 px-5 py-3 bg-[#6e1d3e] rounded-md"
-                    key={i}
-                  >
-                    <p className="mb-3 text-xl font-bold text-[#D2D2D2]">
-                      {transaction?.movie?.title}
-                    </p>
-                    <p className="text-base font-bold text-[#D2D2D2]">
-                      {moment(transaction?.movie?.release_date).format(
-                        "DD MMMM YYYY"
-                      )}
-                    </p>
-                    <div className="flex flex-row justify-between items-center">
-                      <p className="font-bold text-[#CD2E71]">
-                        Total : Rp{" "}
-                        {transaction?.movie?.price.toLocaleString("id-ID", {
-                          minimumFractionDigits: 2,
-                        })}
-                      </p>
-                      {transaction?.status === "success" ||
-                      transaction?.status === "approved" ? (
-                        <p className="px-3 py-2 rounded-md font-bold text-[#D2D2D2] bg-[#00FF47]">
-                          {transaction?.status}
-                        </p>
-                      ) : (
-                        ""
-                      )}
-                      {transaction?.status === "pending" ? (
-                        <p className="px-3 py-2 rounded-md font-bold text-[#D2D2D2] bg-[#daac41]">
-                          {transaction?.status}
-                        </p>
-                      ) : (
-                        ""
-                      )}
-                      {transaction?.status === "failed" ||
-                      transaction?.status === "rejected" ? (
-                        <p className="px-3 py-2 rounded-md font-bold text-[#D2D2D2] bg-[#fc4545]">
-                          {transaction?.status}
-                        </p>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
             </div>
           </div>
         </div>

@@ -8,14 +8,15 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
+// components redux
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { createMovie } from "@/redux/features/movieSlice";
+
 // components
 import AuthAdmin from "@/app/components/auth-admin/authAdmin";
 
-// api
-import { API } from "@/app/api/api";
-
 // types
-import { UserAuth } from "@/types/userAuth";
 import { AddMovieValues } from "@/types/addMovie";
 
 // alert
@@ -26,7 +27,9 @@ import "react-toastify/dist/ReactToastify.css";
 function AddMovie() {
   // session
   const { data: session, status } = useSession();
-  const userAuth: UserAuth | undefined = session?.user;
+
+  // dispatch
+  const dispatch = useDispatch<AppDispatch>();
 
   const router = useRouter();
 
@@ -83,12 +86,6 @@ function AddMovie() {
 
   const onSubmit: SubmitHandler<AddMovieValues> = async (data) => {
     // console.log(data);
-    const config = {
-      headers: {
-        "Content-type": "multipart/form-data",
-        Authorization: "Bearer " + userAuth?.data?.token,
-      },
-    };
 
     const formData = new FormData();
     formData.append("title", data.title);
@@ -103,8 +100,9 @@ function AddMovie() {
     formData.append("full_movie", data.fullMovie[0]);
 
     try {
-      const res = await API.post("/movie", formData, config);
-      if (res.status === 200) {
+      const response = await dispatch(createMovie({ formData, session }));
+
+      if (response.payload && response.payload.status === 200) {
         toast.success("Movie successfully added!", {
           position: "top-right",
           autoClose: 2000,
@@ -116,6 +114,7 @@ function AddMovie() {
           theme: "colored",
           style: { marginTop: "65px" },
         });
+
         router.push("/pages/admin/list-movie");
         reset();
       }

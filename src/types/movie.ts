@@ -6,6 +6,7 @@ export type MovieValues = {
   price: number;
   link: string;
   description: string;
+  thumbnail: string,
   trailer: string;
   fullMovie: string;
   rating: {
