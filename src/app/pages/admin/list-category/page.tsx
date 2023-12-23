@@ -134,10 +134,6 @@ function ListCategory() {
     setCategoryFound(true);
   };
 
-  // useEffect(() => {
-  //   dispatch(fetchCategories());
-  // }, [filteredCategories]);
-
   return (
     <section>
       <AddCategory
