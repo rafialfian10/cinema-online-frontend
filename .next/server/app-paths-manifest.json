@@ -1,8 +1,6 @@
 {
-  "/not-found": "app/not-found.js",
   "/page": "app/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/pages/admin/profile-admin/[id]/page": "app/pages/admin/profile-admin/[id]/page.js",
-  "/pages/users/profile-user/[id]/page": "app/pages/users/profile-user/[id]/page.js"
+  "/pages/admin/list-transaction/page": "app/pages/admin/list-transaction/page.js",
+  "/pages/admin/list-category/page": "app/pages/admin/list-category/page.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js"
 }

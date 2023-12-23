@@ -6,11 +6,6 @@ import { useSession } from "next-auth/react";
 // components react
 import { useState, useEffect } from "react";
 
-// components redux
-import { useDispatch } from "react-redux";
-import { AppDispatch, RootState, useAppSelector } from "@/redux/store";
-import { deleteTransaction, fetchTransactions } from "@/redux/features/transactionSlice";
-
 // components
 import SearchTransaction from "@/app/components/search-transaction/searchTransaction";
 import PaginationTransaction from "@/app/components/pagination-transaction/paginationTransaction";
@@ -41,17 +36,8 @@ function ListTransaction({
   const { data: session, status } = useSession();
   const userAuth: UserAuth | undefined = session?.user;
 
-  // dispatch
-  const dispatch = useDispatch<AppDispatch>();
-
-  const transactions = useAppSelector((state: RootState) => state.transactionSlice.transactions);
-  const loading = useAppSelector(
-    (state: RootState) => state.transactionSlice.loading
-  );
-
-  useEffect(() => {
-    dispatch(fetchTransactions({ session }));
-  }, [dispatch, transactions]);
+  // state transactions
+  const [transactions, setTransactions] = useState<any[]>([]);
 
   // state one transaction
   const [dataTransaction, setDataTransaction] = useState<any>();
@@ -67,10 +53,46 @@ function ListTransaction({
   // state movie found
   const [transactionFound, setTransactionFound] = useState(true);
 
+  // fetch transactions
+  async function fetchTransaction() {
+    if (status === "authenticated" && userAuth?.data?.token) {
+      const config = {
+        headers: {
+          "Content-type": "multipart/form-data",
+          Authorization: "Bearer " + userAuth?.data?.token,
+        },
+      };
+
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/v1/transactions`,
+          {
+            cache: "no-store",
+            headers: config.headers,
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch transactions");
+        }
+
+        const transactionsData = await response.json();
+        setTransactions(transactionsData.data);
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      }
+    }
+  }
+
   // function close modal
   function closeModalUpdateTransaction() {
     setModalUpdateTransaction(false);
+    fetchTransaction();
   }
+
+  useEffect(() => {
+    fetchTransaction();
+  }, [session]);
 
   // pagination transaction
   const page = searchParams["page"] ?? "1";
@@ -78,7 +100,7 @@ function ListTransaction({
 
   const start = (Number(page) - 1) * Number(transactionPerPage);
   const end = start + Number(transactionPerPage);
-  const currentTransaction = transactions ? transactions.slice(start, end) : [];
+  const currentTransaction = transactions.slice(start, end);
 
   // handle search user
   const handleSearchUser = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,9 +158,15 @@ function ListTransaction({
         },
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const response = await dispatch(deleteTransaction({ id, session }));
+          const config = {
+            headers: {
+              "Content-type": "multipart/form-data",
+              Authorization: "Bearer " + userAuth?.data?.token,
+            },
+          };
 
-          if (response.payload && response.payload.status === 200) {
+          const res = await API.delete(`/transaction/${id}`, config);
+          if (res.status === 200) {
             toast.success("Transaction successfully deleted!", {
               position: "top-right",
               autoClose: 2000,
@@ -150,7 +178,7 @@ function ListTransaction({
               theme: "colored",
               style: { marginTop: "65px" },
             });
-      
+            fetchTransaction();
           }
         }
       });
@@ -174,6 +202,7 @@ function ListTransaction({
     <section>
       <UpdateTransaction
         dataTransaction={dataTransaction}
+        fetchTransaction={fetchTransaction}
         modalUpdateTransaction={modalUpdateTransaction}
         setModalUpdateTransaction={setModalUpdateTransaction}
         closeModalUpdateTransaction={closeModalUpdateTransaction}

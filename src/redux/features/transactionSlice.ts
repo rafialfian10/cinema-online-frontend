@@ -11,14 +11,31 @@ import { TransactionValues } from "@/types/transaction";
 
 export const fetchTransactions = createAsyncThunk(
   "transaction/fetch",
-  async (thunkAPI, { rejectWithValue }) => {
-    const response = await fetch("http://localhost:5000/api/v1/transactions");
+  async ({ session }: { session: any }, { rejectWithValue }) => {
+    const userAuth: UserAuth | undefined = session?.user;
+
+    const config = {
+      headers: {
+        "Content-type": "multipart/form-data",
+        Authorization: "Bearer " + userAuth?.data?.token,
+      },
+    };
 
     try {
-      if (response.status === 200) {
-        const result = await response.json();
-        return result.data;
+      const response = await fetch(
+        `http://localhost:5000/api/v1/transactions`,
+        {
+          cache: "no-store",
+          headers: config.headers,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch transaction by user");
       }
+
+      const userData = await response.json();
+      return userData.data;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -40,17 +57,20 @@ export const fetchTransactionByUser = createAsyncThunk(
           Authorization: "Bearer " + userAuth?.data?.token,
         },
       };
-  
+
       try {
-        const response = await fetch(`http://localhost:5000/api/v1/transactions_by_user`, {
-          cache: "no-store",
-          headers: config.headers,
-        });
+        const response = await fetch(
+          `http://localhost:5000/api/v1/transactions_by_user`,
+          {
+            cache: "no-store",
+            headers: config.headers,
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch transaction by user");
         }
-  
+
         const userData = await response.json();
         return userData.data;
       } catch (error) {

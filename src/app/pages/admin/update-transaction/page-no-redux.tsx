@@ -9,11 +9,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import moment from "moment";
 
-// components redux
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
-import { updateTransaction } from "@/redux/features/transactionSlice";
-
 // components
 import AuthAdmin from "@/app/components/auth-admin/authAdmin";
 
@@ -40,12 +35,12 @@ export interface UpdateTransactionProps {
   setModalUpdateTransaction: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalUpdateTransaction: () => void;
   dataTransaction: any;
-  // fetchTransaction: () => void;
+  fetchTransaction: () => void;
 }
 
 function UpdateTransaction({
   dataTransaction,
-  // fetchTransaction,
+  fetchTransaction,
   modalUpdateTransaction,
   setModalUpdateTransaction,
   closeModalUpdateTransaction,
@@ -54,22 +49,26 @@ function UpdateTransaction({
   const { data: session, status } = useSession();
   const userAuth: UserAuth | undefined = session?.user;
 
-  // dispatch
-  const dispatch = useDispatch<AppDispatch>();
-
   // handle approve transaction
   const handleApprove = async (e: any) => {
     e.preventDefault();
+    const config = {
+      headers: {
+        "Content-type": "multipart/form-data",
+        Authorization: "Bearer " + userAuth?.data?.token,
+      },
+    };
 
     const formData = new FormData();
     formData.append("status", "approved");
 
     try {
-      const response = await dispatch(
-        updateTransaction({ formData, id: dataTransaction?.id, session })
+      const res = await API.patch(
+        `/transaction/${dataTransaction?.id}`,
+        formData,
+        config
       );
-
-      if (response.payload && response.payload.status === 200) {
+      if (res.status === 200) {
         toast.success("Transaction successfully approved!", {
           position: "top-right",
           autoClose: 2000,
@@ -82,7 +81,7 @@ function UpdateTransaction({
           style: { marginTop: "65px" },
         });
         setModalUpdateTransaction(false);
-        // fetchTransaction();
+        fetchTransaction();
       }
     } catch (e) {
       console.log("API Error:", e);
@@ -120,14 +119,22 @@ function UpdateTransaction({
         },
       }).then(async (result) => {
         if (result.isConfirmed) {
+          const config = {
+            headers: {
+              "Content-type": "multipart/form-data",
+              Authorization: "Bearer " + userAuth?.data?.token,
+            },
+          };
+
           const formData = new FormData();
           formData.append("status", "rejected");
 
-          const response = await dispatch(
-            updateTransaction({ formData, id: dataTransaction?.id, session })
+          const res = await API.patch(
+            `/transaction/${dataTransaction?.id}`,
+            formData,
+            config
           );
-
-          if (response.payload && response.payload.status === 200) {
+          if (res.status === 200) {
             toast.success("Transaction successfully rejected!", {
               position: "top-right",
               autoClose: 2000,
@@ -140,7 +147,7 @@ function UpdateTransaction({
               style: { marginTop: "65px" },
             });
             setModalUpdateTransaction(false);
-            // fetchTransaction();
+            fetchTransaction();
           }
         }
       });

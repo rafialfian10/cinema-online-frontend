@@ -1,6 +1,5 @@
 // components next
 import Head from "next/head";
-import Image, { StaticImageData } from "next/image";
 
 // components
 import Navbar from "./components/navbar/navbar";
@@ -14,10 +13,6 @@ import "./globals.css";
 
 // metadata
 import type { Metadata } from "next";
-
-// image
-import cinemaOnlineIcon from "@/assets/img/icon.png";
-const favicon: StaticImageData = cinemaOnlineIcon;
 
 // font
 import { Inter } from "next/font/google";
@@ -37,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Head>
-        <link rel="icon" href={favicon.src} type="image/png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
       </Head>
       <body className={inter.className}>
         <AuthProvider>
