@@ -17,12 +17,6 @@ import PaginationTransaction from "@/app/components/pagination-transaction/pagin
 import UpdateTransaction from "../update-transaction/page";
 import AuthAdmin from "@/app/components/auth-admin/authAdmin";
 
-// api
-import { API } from "@/app/api/api";
-
-// types
-import { UserAuth } from "@/types/userAuth";
-
 // alert
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
@@ -39,7 +33,6 @@ function ListTransaction({
 }) {
   // session
   const { data: session, status } = useSession();
-  const userAuth: UserAuth | undefined = session?.user;
 
   // dispatch
   const dispatch = useDispatch<AppDispatch>();
@@ -182,7 +175,7 @@ function ListTransaction({
         <p className="w-full mb-5 font-bold text-2xl text-[#D2D2D2]">
           List Transaction
         </p>
-        <div className="grid grid-cols-1">
+        <div className="grid grid-cols-1 overflow-y-auto">
           <table className="min-w-full text-left text-sm font-light">
             <thead className="border-b bg-[#0D0D0D] font-medium">
               <tr>

@@ -1,1 +1,8 @@
-{}
+{
+  "/page": "app/page.js",
+  "/not-found": "app/not-found.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/pages/admin/list-transaction/page": "app/pages/admin/list-transaction/page.js",
+  "/pages/admin/list-category/page": "app/pages/admin/list-category/page.js",
+  "/pages/admin/profile-admin/[id]/page": "app/pages/admin/profile-admin/[id]/page.js"
+}
