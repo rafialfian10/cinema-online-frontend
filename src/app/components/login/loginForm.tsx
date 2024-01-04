@@ -149,7 +149,7 @@ export default function Login({
         setShowSuccessToast(false);
       }, 4000);
     }
-  }, [showSuccessToast]);
+  }, [showSuccessToast, user?.data?.username]);
 
   return (
     <section>
@@ -254,13 +254,12 @@ export default function Login({
                       </button>
                     </div>
                     <div className="col-span-full mt-2 text-center">
-                      <p className="text-sm text-[#D2D2D2]">
+                      <span className="text-sm text-[#D2D2D2]">
                         Don't have an account ?{" "}
                         <button type="button" onClick={handleModalRegister}>
-                          {" "}
                           Click Here
                         </button>
-                      </p>
+                      </span>
                     </div>
                   </form>
 
