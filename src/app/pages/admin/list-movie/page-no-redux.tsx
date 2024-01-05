@@ -138,7 +138,6 @@ function ListMovie() {
                           />
                           <ButtonDeleteMovie
                             movieId={movie?.id}
-                            fetchMovies={fetchMovies}
                           />
                         </div>
                       </Menu.Items>

@@ -23,7 +23,7 @@
       "static/chunks/543-c447054cb9780ccf.js",
       "static/chunks/247-99588ec6e21a6ddd.js",
       "static/css/319168a4e88fcaef.css",
-      "static/chunks/app/layout-6cbff962e7bd99fd.js"
+      "static/chunks/app/layout-bd56a5e45f0db94e.js"
     ],
     "/error": [
       "static/chunks/webpack-6bbebe7cabdacdd9.js",
@@ -73,6 +73,20 @@
       "static/css/431944509084d071.css",
       "static/chunks/app/pages/admin/add-movie/page-cdaaa72ce67b6504.js"
     ],
+    "/pages/admin/list-category/page": [
+      "static/chunks/webpack-6bbebe7cabdacdd9.js",
+      "static/chunks/fd9d1056-bef01905ed2f5a2b.js",
+      "static/chunks/864-d40154ef16722f85.js",
+      "static/chunks/main-app-0fc2a85512770f33.js",
+      "static/chunks/41ade5dc-da4c4088fb18f708.js",
+      "static/chunks/236-65a1f68e491db35d.js",
+      "static/chunks/141-04b7abfbce654a20.js",
+      "static/chunks/865-8b560fb52a42c6e1.js",
+      "static/chunks/303-5cb040c8c1d304ac.js",
+      "static/chunks/247-99588ec6e21a6ddd.js",
+      "static/css/7c907a56fefe23fe.css",
+      "static/chunks/app/pages/admin/list-category/page-cc00f8c29212f6f5.js"
+    ],
     "/pages/admin/list-movie/page": [
       "static/chunks/webpack-6bbebe7cabdacdd9.js",
       "static/chunks/fd9d1056-bef01905ed2f5a2b.js",
@@ -89,20 +103,6 @@
       "static/chunks/130-7f5369abdfb0b5a5.js",
       "static/css/626e3ac9c896849e.css",
       "static/chunks/app/pages/admin/list-movie/page-38a211bc6539398a.js"
-    ],
-    "/pages/admin/list-category/page": [
-      "static/chunks/webpack-6bbebe7cabdacdd9.js",
-      "static/chunks/fd9d1056-bef01905ed2f5a2b.js",
-      "static/chunks/864-d40154ef16722f85.js",
-      "static/chunks/main-app-0fc2a85512770f33.js",
-      "static/chunks/41ade5dc-da4c4088fb18f708.js",
-      "static/chunks/236-65a1f68e491db35d.js",
-      "static/chunks/141-04b7abfbce654a20.js",
-      "static/chunks/865-8b560fb52a42c6e1.js",
-      "static/chunks/303-5cb040c8c1d304ac.js",
-      "static/chunks/247-99588ec6e21a6ddd.js",
-      "static/css/7c907a56fefe23fe.css",
-      "static/chunks/app/pages/admin/list-category/page-cc00f8c29212f6f5.js"
     ],
     "/pages/admin/list-transaction/page": [
       "static/chunks/webpack-6bbebe7cabdacdd9.js",

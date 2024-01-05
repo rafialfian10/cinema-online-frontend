@@ -255,8 +255,9 @@ export default function Login({
                     </div>
                     <div className="col-span-full mt-2 text-center">
                       <span className="text-sm text-[#D2D2D2]">
-                        Don't have an account ?{" "}
+                        Don&rsquo;t have an account ?{" "}
                         <button type="button" onClick={handleModalRegister}>
+                          {" "}
                           Click Here
                         </button>
                       </span>
