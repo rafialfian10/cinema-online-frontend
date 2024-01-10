@@ -55,18 +55,19 @@ export default function DetailMovie({ params }: IdParamsProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   const movie = useAppSelector((state: RootState) => state.movieSlice.movie);
+
   const loading = useAppSelector(
     (state: RootState) => state.movieSlice.loading
   );
   const transactions = useAppSelector(
     (state: RootState) => state.transactionSlice.transactions
-  );  
+  );
 
   useEffect(() => {
-    dispatch(fetchMovie({ id: params?.id }));
     if (status === "authenticated" && userAuth?.data?.token) {
       dispatch(fetchTransactionByUser({ session, status }));
     }
+    dispatch(fetchMovie({ id: params?.id }));
   }, []);
 
   const router = useRouter();
@@ -169,7 +170,9 @@ export default function DetailMovie({ params }: IdParamsProps) {
                 }
               );
               dispatch(fetchTransactionByUser({ session, status }));
-              window.location.replace(`/pages/users/profile-user/${userCheckAuth?.id}`);
+              window.location.replace(
+                `/pages/users/profile-user/${userCheckAuth?.id}`
+              );
             },
             onPending: function (result: any) {
               toast.warning("please make payment first", {
@@ -238,12 +241,12 @@ export default function DetailMovie({ params }: IdParamsProps) {
   }, []);
 
   useEffect(() => {
-    if (movie?.rating && Array.isArray(movie.rating)) {
-      const totalRating = movie.rating.reduce(
+    if (movie?.rating && Array.isArray(movie?.rating)) {
+      const totalRating = movie?.rating.reduce(
         (acc, curr) => acc + curr.star,
         0
       );
-      const averageRating = totalRating / movie.rating.length;
+      const averageRating = totalRating / movie?.rating.length;
       setAverageRating(averageRating);
     }
   }, [movie]);
@@ -329,7 +332,7 @@ export default function DetailMovie({ params }: IdParamsProps) {
             )}
 
             <div className="flex flex-row flex-wrap">
-              {movie?.category.map((cat: any) => (
+              {movie?.category?.map((cat: any) => (
                 <p
                   className="mr-1 mt-3 text-lg font-bold text-[#D2D2D2]"
                   key={cat?.id}
@@ -339,10 +342,13 @@ export default function DetailMovie({ params }: IdParamsProps) {
               ))}
             </div>
             <p className="my-1 text-lg max-md:text-base font-bold text-[#CD2E71]">
-              Rp.{" "}
-              {movie?.price.toLocaleString("id-ID", {
-                minimumFractionDigits: 2,
-              })}
+              Rp.&nbsp;
+              {movie?.price
+                ? movie?.price.toLocaleString("id-ID", {
+                    minimumFractionDigits: 2,
+                  })
+                : "N/A"
+              }
             </p>
             <p className="mt-1 mb-5 text-base max-md:text-sm text-justify text-[#D2D2D2]">
               {movie?.description}

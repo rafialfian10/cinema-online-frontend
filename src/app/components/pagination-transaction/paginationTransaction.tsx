@@ -59,8 +59,8 @@ const PaginationTransaction: FC<PaginationTransactionProps> = ({
   };
 
   return (
-    <div className="w-full mb-10 px-4 md:px-10 lg:px-20 pb-10">
-      <div className="mb-2 flex max-sm:justify-center">
+    <div className="w-full mb-10 px-0 md:px-10 lg:px-20 pb-10">
+      <div className="w-full mb-2 flex max-sm:justify-center">
         <p className="text-sm text-gray-700">
           Showing{" "}
           <span className="font-medium">

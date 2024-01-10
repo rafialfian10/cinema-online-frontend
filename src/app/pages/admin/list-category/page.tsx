@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 // components next
@@ -19,6 +20,7 @@ import AddCategory from "../add-category/page";
 import UpdateCategory from "../update-category/page";
 import SearchCategory from "@/app/components/search-category/searchCategory";
 import AuthAdmin from "@/app/components/auth-admin/authAdmin";
+import Loading from "@/app/loading";
 
 // alert
 import Swal from "sweetalert2";
@@ -38,14 +40,13 @@ function ListCategory() {
   const categories = useAppSelector(
     (state: RootState) => state.categorySlice.categories
   );
-  
   const loading = useAppSelector(
     (state: RootState) => state.categorySlice.loading
   );
 
   useEffect(() => {
     dispatch(fetchCategories());
-  }, [dispatch, categories]);
+  }, []);
 
   // state data category
   const [dataCategory, setDataCategory] = useState<any>();
@@ -109,6 +110,7 @@ function ListCategory() {
               theme: "colored",
               style: { marginTop: "65px" },
             });
+            dispatch(fetchCategories());
           }
         }
       });
@@ -135,23 +137,26 @@ function ListCategory() {
   };
 
   return (
-    <section>
+    <section className="w-full min-h-screen mt-20">
       <AddCategory
         modalAddCategory={modalAddCategory}
         setModalAddCategory={setModalAddCategory}
         closeModalAddcategory={closeModalAddcategory}
+        fetchCategories={() => dispatch(fetchCategories())}
       />
       <UpdateCategory
         modalUpdateCategory={modalUpdateCategory}
         setModalUpdateCategory={setModalUpdateCategory}
         closeModalUpdatecategory={closeModalUpdatecategory}
         dataCategory={dataCategory}
+        fetchCategories={() => dispatch(fetchCategories())}
       />
-      <div className="w-full mt-20 px-4 md:px-10 lg:px-20 pb-10">
-        <p className="w-full mb-5 font-bold text-2xl text-[#D2D2D2]">
-          List Category
-        </p>
-        <div className="text-right">
+      <div className="w-full px-4 md:px-10 lg:px-20 pb-10">
+        <div className="mb-5 flex justify-between">
+          <p className="m-0 text-center font-bold text-2xl text-[#D2D2D2]">
+            List category
+          </p>
+          <div className="flex align-middle text-center">
           <button
             type="button"
             className="p-2 rounded text-[#D2D2D2] font-bold bg-[#CD2E71] hover:opacity-80"
@@ -159,121 +164,126 @@ function ListCategory() {
           >
             Add Category
           </button>
+          </div>
         </div>
-        <div className="grid grid-cols-1 gap-4">
-          <div className="flex flex-col">
-            <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                <div className="overflow-hidden">
-                  <table className="min-w-full text-left text-sm font-light">
-                    <thead className="border-b bg-[#0D0D0D] font-medium">
-                      <tr>
-                        <th
-                          scope="col"
-                          className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
-                        >
-                          No
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-4 text-[#D2D2D2] font-bold text-center flex items-center"
-                        >
-                          Name
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-4 text-[#D2D2D2] font-bold text-center"
-                        >
-                          Action
-                        </th>
-                      </tr>
-                    </thead>
-                    <thead className="border-b bg-[#0D0D0D] font-medium">
-                      <tr>
-                        <th
-                          scope="col"
-                          className="px-2 text-[#D2D2D2] font-bold text-center"
-                        ></th>
-                        <th
-                          scope="col"
-                          className="text-[#D2D2D2] font-bold text-center flex items-center"
-                        >
-                          <SearchCategory
-                            search={search}
-                            handleSearchCategory={handleSearchCategory}
-                          />
-                        </th>
-                        <th
-                          scope="col"
-                          className="py-4 text-[#D2D2D2] font-bold text-center"
-                        ></th>
-                      </tr>
-                    </thead>
-                    {filteredCategories.length > 0 ? (
-                      filteredCategories?.map((category, i) => {
-                        return (
-                          <tbody key={i}>
-                            <tr className="border-b bg-[#232323]">
-                              <td className="whitespace-nowrap px-2 py-4 font-medium text-[#D2D2D2] text-center">
-                                {i++ + 1}
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4 text-[#D2D2D2] text-left">
-                                {category?.name}
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4 text-center">
-                                <button
-                                  type="button"
-                                  className="px-2 py-1 rounded-md text-[#D2D2D2] font-bold bg-[#0D0D0D] hover:opacity-80"
-                                  onClick={() => {
-                                    setModalUpdateCategory(true);
-                                    setDataCategory(category);
-                                  }}
-                                >
-                                  Update
-                                </button>
-                                <span className="text-[#D2D2D2] font-bold mx-2">
-                                  |
-                                </span>
-                                <button
-                                  type="button"
-                                  className="px-2 py-1 rounded-md text-[#D2D2D2] font-bold bg-[#CD2E71] hover:opacity-80"
-                                  onClick={() =>
-                                    handleDeleteCategory(category?.id)
-                                  }
-                                >
-                                  Delete
-                                </button>
-                              </td>
-                            </tr>
-                          </tbody>
-                        );
-                      })
-                    ) : (
-                      <tbody>
-                        <tr className="border-b bg-[#232323] font-medium">
-                          <td
+        {loading ? (
+          <Loading />
+        ) : (
+          <div className="grid grid-cols-1 gap-4">
+            <div className="flex flex-col">
+              <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                  <div className="overflow-hidden">
+                    <table className="min-w-full text-left text-sm font-light">
+                      <thead className="border-b bg-[#0D0D0D] font-medium">
+                        <tr>
+                          <th
                             scope="col"
-                            className="px-2 text-[#D2D2D2] text-center"
-                          ></td>
-                          <td
-                            scope="col"
-                            className="px-6 py-4 text-[#D2D2D2] text-left"
+                            className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
                           >
-                            Name not found
-                          </td>
-                          <td
+                            No
+                          </th>
+                          <th
                             scope="col"
-                            className="py-4 text-[#D2D2D2] text-center"
-                          ></td>
+                            className="px-6 py-4 text-[#D2D2D2] font-bold text-center flex items-center"
+                          >
+                            Name
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-6 py-4 text-[#D2D2D2] font-bold text-center"
+                          >
+                            Action
+                          </th>
                         </tr>
-                      </tbody>
-                    )}
-                  </table>
+                      </thead>
+                      <thead className="border-b bg-[#0D0D0D] font-medium">
+                        <tr>
+                          <th
+                            scope="col"
+                            className="px-2 text-[#D2D2D2] font-bold text-center"
+                          ></th>
+                          <th
+                            scope="col"
+                            className="text-[#D2D2D2] font-bold text-center flex items-center"
+                          >
+                            <SearchCategory
+                              search={search}
+                              handleSearchCategory={handleSearchCategory}
+                            />
+                          </th>
+                          <th
+                            scope="col"
+                            className="py-4 text-[#D2D2D2] font-bold text-center"
+                          ></th>
+                        </tr>
+                      </thead>
+                      {filteredCategories.length > 0 ? (
+                        filteredCategories?.map((category, i) => {
+                          return (
+                            <tbody key={i}>
+                              <tr className="border-b bg-[#232323]">
+                                <td className="whitespace-nowrap px-2 py-4 font-medium text-[#D2D2D2] text-center">
+                                  {i++ + 1}
+                                </td>
+                                <td className="whitespace-nowrap px-6 py-4 text-[#D2D2D2] text-left">
+                                  {category?.name}
+                                </td>
+                                <td className="whitespace-nowrap px-6 py-4 text-center">
+                                  <button
+                                    type="button"
+                                    className="px-2 py-1 rounded-md text-[#D2D2D2] font-bold bg-[#0D0D0D] hover:opacity-80"
+                                    onClick={() => {
+                                      setModalUpdateCategory(true);
+                                      setDataCategory(category);
+                                    }}
+                                  >
+                                    Update
+                                  </button>
+                                  <span className="text-[#D2D2D2] font-bold mx-2">
+                                    |
+                                  </span>
+                                  <button
+                                    type="button"
+                                    className="px-2 py-1 rounded-md text-[#D2D2D2] font-bold bg-[#CD2E71] hover:opacity-80"
+                                    onClick={() =>
+                                      handleDeleteCategory(category?.id)
+                                    }
+                                  >
+                                    Delete
+                                  </button>
+                                </td>
+                              </tr>
+                            </tbody>
+                          );
+                        })
+                      ) : (
+                        <tbody>
+                          <tr className="border-b bg-[#232323] font-medium">
+                            <td
+                              scope="col"
+                              className="px-2 text-[#D2D2D2] text-center"
+                            ></td>
+                            <td
+                              scope="col"
+                              className="px-6 py-4 text-[#D2D2D2] text-left"
+                            >
+                              Name not found
+                            </td>
+                            <td
+                              scope="col"
+                              className="py-4 text-[#D2D2D2] text-center"
+                            ></td>
+                          </tr>
+                        </tbody>
+                      )}
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

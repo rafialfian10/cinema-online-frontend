@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 // components next
@@ -6,13 +7,14 @@ import { useSession } from "next-auth/react";
 
 // components react
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 // components redux
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState, useAppSelector } from "@/redux/store";
 import { updateMovie } from "@/redux/features/movieSlice";
+import { fetchCategories } from "@/redux/features/categorySlice";
 
 // components
 import AuthAdmin from "@/app/components/auth-admin/authAdmin";
@@ -46,6 +48,7 @@ function UpdateMovie({
   setModalUpdateMovie,
   closeModalUpdateMovie,
   dataMovie,
+  fetchMovies,
 }: UpdateMovieProps) {
   // session
   const { data: session, status } = useSession();
@@ -54,24 +57,11 @@ function UpdateMovie({
   // dispatch
   const dispatch = useDispatch<AppDispatch>();
 
-  // state categories
-  const [categories, setCategories] = useState<any[]>([]);
-
-  // fetch categories
-  async function fetchCategories() {
-    try {
-      const categoriesData = await getAllCategories();
-      setCategories(categoriesData.data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  }
+  const categories = useAppSelector((state: RootState) => state.categorySlice.categories);
 
   useEffect(() => {
-    if (modalUpdateMovie) {
-      fetchCategories();
-    }
-  }, [modalUpdateMovie, dataMovie]);
+    dispatch(fetchCategories());
+  }, [])
 
   // error message
   const errorMessages = {
@@ -151,7 +141,7 @@ function UpdateMovie({
           theme: "colored",
           style: { marginTop: "65px" },
         });
-
+        fetchMovies();
         setModalUpdateMovie(false);
         reset();
       }
@@ -217,6 +207,7 @@ function UpdateMovie({
               theme: "colored",
               style: { marginTop: "65px" },
             });
+            fetchMovies();
             setModalUpdateMovie(false);
           }
         }
@@ -279,6 +270,7 @@ function UpdateMovie({
               theme: "colored",
               style: { marginTop: "65px" },
             });
+            fetchMovies();
             setModalUpdateMovie(false);
           }
         }
@@ -341,6 +333,7 @@ function UpdateMovie({
               theme: "colored",
               style: { marginTop: "65px" },
             });
+            fetchMovies();
             setModalUpdateMovie(false);
           }
         }
@@ -392,7 +385,7 @@ function UpdateMovie({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md md:max-w-4xl transform overflow-hidden rounded-2xl bg-[#0D0D0D] p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-md md:max-w-4xl mt-20 mb-10 transform overflow-hidden rounded-2xl bg-[#0D0D0D] p-6 text-left align-middle shadow-xl transition-all">
                   <form
                     onSubmit={handleSubmit(onSubmit, onError)}
                     encType="multipart/form-data"

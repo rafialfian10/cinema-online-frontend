@@ -35,8 +35,6 @@ export const fetchMovie = createAsyncThunk(
       const response = await fetch(`http://localhost:5000/api/v1/movie/${id}`);
       if (response.status === 200) {
         const result = await response.json();
-        console.log(result);
-        
         
         return result.data;
       }

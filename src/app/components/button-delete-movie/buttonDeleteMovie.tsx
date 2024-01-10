@@ -25,6 +25,7 @@ import styles from "./button-delete-movie.module.css";
 
 interface MovieIdProps {
   movieId: number;
+  fetchMovies: () => void;
 }
 
 function classNames(...classes: any) {
@@ -33,6 +34,7 @@ function classNames(...classes: any) {
 
 export default function ButtonDeleteMovie({
   movieId,
+  fetchMovies,
 }: MovieIdProps) {
   const { data: session, status } = useSession();
   const user: UserAuth | undefined = session?.user;
@@ -60,7 +62,6 @@ export default function ButtonDeleteMovie({
       }).then(async (result) => {
         if (result.isConfirmed) {
           const response = await dispatch(deleteMovie({ id, session }));
-
           if (response.payload && response.payload.status === 200) {
             toast.success("Movie successfully deleted!", {
               position: "top-right",
@@ -73,6 +74,7 @@ export default function ButtonDeleteMovie({
               theme: "colored",
               style: { marginTop: "65px" },
             });
+            fetchMovies();
           }
         }
       });

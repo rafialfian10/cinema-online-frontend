@@ -32,12 +32,14 @@ export interface AddCategoryProps {
   modalAddCategory: boolean;
   setModalAddCategory: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAddcategory: () => void;
+  fetchCategories: () => void;
 }
 
 function AddCategory({
   modalAddCategory,
   setModalAddCategory,
   closeModalAddcategory,
+  fetchCategories,
 }: AddCategoryProps) {
   const { data: session, status } = useSession();
   const user: UserAuth | undefined = session?.user;
@@ -77,7 +79,7 @@ function AddCategory({
           theme: "colored",
           style: { marginTop: "65px" },
         });
-
+        fetchCategories();
         setModalAddCategory(false);
         reset();
       }

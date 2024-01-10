@@ -33,6 +33,7 @@ export interface UpdateCategoryProps {
   setModalUpdateCategory: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalUpdatecategory: () => void;
   dataCategory: any;
+  fetchCategories: () => void;
 }
 
 function UpdateCategory({
@@ -40,6 +41,7 @@ function UpdateCategory({
   setModalUpdateCategory,
   closeModalUpdatecategory,
   dataCategory,
+  fetchCategories,
 }: UpdateCategoryProps) {
   const { data: session, status } = useSession();
   const user: UserAuth | undefined = session?.user;
@@ -89,7 +91,7 @@ function UpdateCategory({
           theme: "colored",
           style: { marginTop: "65px" },
         });
-
+        fetchCategories();
         setModalUpdateCategory(false);
         reset();
       }

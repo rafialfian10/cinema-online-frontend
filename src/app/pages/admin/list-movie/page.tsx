@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 // components next
@@ -19,8 +20,9 @@ import SearchMovie from "@/app/components/search-movie/searchMovie";
 import ButtonUpdateMovie from "@/app/components/button-update-movie/buttonUpdateMovie";
 import ButtonDeleteMovie from "@/app/components/button-delete-movie/buttonDeleteMovie";
 import AuthAdmin from "@/app/components/auth-admin/authAdmin";
+import Loading from "@/app/loading";
 
-// image
+// images
 import list from "@/assets/img/titik3.png";
 // ----------------------------------------------------------
 
@@ -35,7 +37,7 @@ function ListMovie() {
 
   useEffect(() => {
     dispatch(fetchMovies());
-  }, [dispatch, movies]);
+  }, []);
 
   // state data movie
   const [dataMovie, setDataMovie] = useState<any>();
@@ -62,10 +64,9 @@ function ListMovie() {
   };
 
   // Filtered movie
-  const filteredMovies = movies.filter(
+  const filteredMovies = movies?.filter(
     (movie: any) =>
-      movie?.title &&
-      movie.title.toLowerCase().includes(search.toLowerCase())
+      movie?.title && movie?.title.toLowerCase().includes(search.toLowerCase())
   );
 
   useEffect(() => {
@@ -77,126 +78,131 @@ function ListMovie() {
   }, [filteredMovies, search]);
 
   return (
-    <section>
+    <section className="w-full min-h-screen mt-20">
       <UpdateMovie
         modalUpdateMovie={modalUpdateMovie}
         setModalUpdateMovie={setModalUpdateMovie}
         closeModalUpdateMovie={closeModalUpdateMovie}
         dataMovie={dataMovie}
+        fetchMovies={() => dispatch(fetchMovies())}
       />
-      <div className="w-full mt-20 px-4 md:px-10 lg:px-20 pb-10">
+      <div className="w-full px-4 md:px-10 lg:px-20 pb-10">
         <SearchMovie search={search} handleSearchMovie={handleSearchMovie} />
-        <p className="w-full mb-5 font-bold text-2xl text-[#D2D2D2]">
-          List Movie
-        </p>
-        <div className="mb-5 text-right ">
-          <Link
-            href="/pages/admin/add-movie"
-            className="p-2 rounded text-[#D2D2D2] font-bold bg-[#CD2E71] hover:opacity-80"
-          >
-            Add Movie
-          </Link>
+        <div className="mb-5 flex justify-between">
+          <p className="m-0 text-center font-bold text-2xl text-[#D2D2D2]">
+            List Movie
+          </p>
+          <div className="flex align-middle text-center">
+            <Link
+              href="/pages/admin/add-movie"
+              className="m-0 p-2 rounded text-[#D2D2D2] font-bold bg-[#CD2E71] hover:opacity-80"
+            >
+              Add Movie
+            </Link>
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredMovies.length > 0 ? (
-            filteredMovies?.map((movie, i) => {
-              return (
-                <div
-                  className="w-30% flex flex-col justify-between rounded-md bg-[#0D0D0D]"
-                  key={i}
-                >
-                  <Menu
-                    as="div"
-                    className="absolute inline-block text-left self-end"
+        {loading ? (
+          <Loading />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredMovies.length > 0 ? (
+              filteredMovies?.map((movie, i) => {
+                return (
+                  <div
+                    className="w-30% flex flex-col justify-between rounded-md bg-[#0D0D0D]"
+                    key={i}
                   >
-                    <div>
-                      <Menu.Button className="inline-flex w-10 justify-center gap-1 bg-transparent p-1">
-                        <Image
-                          src={list}
-                          alt="list"
-                          width={100}
-                          height={100}
-                          priority={true}
-                        />
-                      </Menu.Button>
+                    <Menu
+                      as="div"
+                      className="absolute inline-block text-left self-end"
+                    >
+                      <div>
+                        <Menu.Button className="inline-flex w-10 justify-center gap-1 bg-transparent p-1">
+                          <Image
+                            src={list}
+                            alt="list"
+                            width={100}
+                            height={100}
+                            priority={true}
+                          />
+                        </Menu.Button>
+                      </div>
+
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-[#0D0D0D] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <div className="py-1">
+                            <ButtonUpdateMovie
+                              movie={movie}
+                              setModalUpdateMovie={setModalUpdateMovie}
+                              setDataMovie={setDataMovie}
+                            />
+                            <ButtonDeleteMovie movieId={movie?.id} fetchMovies={() => dispatch(fetchMovies())} />
+                          </div>
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
+
+                    <div className="w-full h-52">
+                      <Image
+                        src={movie?.thumbnail}
+                        alt={movie?.title}
+                        width={400}
+                        height={400}
+                        className="w-full h-full object-cover"
+                        priority={true}
+                      />
                     </div>
 
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-[#0D0D0D] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <div className="py-1">
-                          <ButtonUpdateMovie
-                            movie={movie}
-                            setModalUpdateMovie={setModalUpdateMovie}
-                            setDataMovie={setDataMovie}
-                          />
-                          <ButtonDeleteMovie
-                            movieId={movie?.id}
-                          />
-                        </div>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
-
-                  <div className="w-full h-52">
-                    <Image
-                      src={movie?.thumbnail}
-                      alt={movie?.title}
-                      width={400}
-                      height={400}
-                      className="w-full h-full object-cover"
-                      priority={true}
-                    />
-                  </div>
-
-                  <div className="p-5">
-                    <p className="mb-2 text-2xl font-bold tracking-tight text-[#D2D2D2] dark:text-[#D2D2D2]">
-                      {movie?.title}
-                    </p>
-                    <p className="mb-3 font-normal text-[#D2D2D2] dark:text-[#D2D2D2]">
-                      {movie?.description.length > 100
-                        ? `${movie?.description.substring(0, 100)}...`
-                        : movie?.description}
-                    </p>
-                    <a
-                      href={`/pages/users/detail-movie/${movie?.id}`}
-                      className="inline-flex items-center px-3 py-2 text-sm font-medium bg-[#3E3E3E] text-center text-[#D2D2D2] rounded-md hover:opacity-80"
-                    >
-                      detail movie
-                      <svg
-                        className="w-3.5 h-3.5 ml-2"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 14 10"
+                    <div className="p-5">
+                      <p className="mb-2 text-2xl font-bold tracking-tight text-[#D2D2D2] dark:text-[#D2D2D2]">
+                        {movie?.title}
+                      </p>
+                      <p className="mb-3 font-normal text-[#D2D2D2] dark:text-[#D2D2D2]">
+                        {movie?.description.length > 100
+                          ? `${movie?.description.substring(0, 100)}...`
+                          : movie?.description}
+                      </p>
+                      <a
+                        href={`/pages/users/detail-movie/${movie?.id}`}
+                        className="inline-flex items-center px-3 py-2 text-sm font-medium bg-[#3E3E3E] text-center text-[#D2D2D2] rounded-md hover:opacity-80"
                       >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M1 5h12m0 0L9 1m4 4L9 9"
-                          fillRule="evenodd"
-                        />
-                      </svg>
-                    </a>
+                        detail movie
+                        <svg
+                          className="w-3.5 h-3.5 ml-2"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 14 10"
+                        >
+                          <path
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M1 5h12m0 0L9 1m4 4L9 9"
+                            fillRule="evenodd"
+                          />
+                        </svg>
+                      </a>
+                    </div>
                   </div>
-                </div>
-              );
-            })
-          ) : (
-            <p className="w-full min-h-screen text-[#D2D2D2] dark:text-[#D2D2D2] text-left mt-2">
-              Movie not found.
-            </p>
-          )}
-        </div>
+                );
+              })
+            ) : (
+              <p className="w-full min-h-screen text-[#D2D2D2] dark:text-[#D2D2D2] text-left mt-2">
+                Movie not found.
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </section>
   );

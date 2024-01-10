@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 // components next
@@ -10,8 +11,9 @@ import { useForm, SubmitHandler } from "react-hook-form";
 
 // components redux
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
-import { createMovie } from "@/redux/features/movieSlice";
+import { AppDispatch, RootState, useAppSelector } from "@/redux/store";
+import { createMovie, fetchMovies } from "@/redux/features/movieSlice";
+import { fetchCategories } from "@/redux/features/categorySlice";
 
 // components
 import AuthAdmin from "@/app/components/auth-admin/authAdmin";
@@ -31,23 +33,14 @@ function AddMovie() {
   // dispatch
   const dispatch = useDispatch<AppDispatch>();
 
-  const router = useRouter();
-
-  // state categories
-  const [categories, setCategories] = useState<any[]>([]);
+  const categories = useAppSelector((state: RootState) => state.categorySlice.categories);
 
   useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const categoriesData = await getAllCategories();
-        setCategories(categoriesData.data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    }
+    dispatch(fetchMovies());
+    dispatch(fetchCategories());
+  }, [])
 
-    fetchCategories();
-  }, []);
+  const router = useRouter();
 
   const errorMessages = {
     title: "Title is required",
@@ -114,7 +107,7 @@ function AddMovie() {
           theme: "colored",
           style: { marginTop: "65px" },
         });
-
+        dispatch(fetchMovies());
         router.push("/pages/admin/list-movie");
         reset();
       }
@@ -155,7 +148,7 @@ function AddMovie() {
   };
 
   return (
-    <section className="w-full mt-20 px-32 max-md:px-5 pb-10">
+    <section className="w-full my-20 px-32 max-md:px-5">
       <form encType="multipart/form-data">
         <p className="w-full font-bold text-2xl text-[#D2D2D2]">Add Movie</p>
         <div className="border-b border-gray-900/10 pb-8">

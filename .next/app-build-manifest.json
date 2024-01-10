@@ -1,3 +1,67 @@
 {
-  "pages": {}
+  "pages": {
+    "/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
+    ],
+    "/error": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/error.js"
+    ],
+    "/loading": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/loading.js"
+    ],
+    "/not-found": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/not-found.js"
+    ],
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/page.css",
+      "static/chunks/app/page.js"
+    ],
+    "/pages/admin/profile-admin/[id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/pages/admin/profile-admin/[id]/page.css",
+      "static/chunks/app/pages/admin/profile-admin/[id]/page.js"
+    ],
+    "/pages/admin/list-movie/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/pages/admin/list-movie/page.css",
+      "static/chunks/app/pages/admin/list-movie/page.js"
+    ],
+    "/pages/users/detail-movie/[id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/pages/users/detail-movie/[id]/page.css",
+      "static/chunks/app/pages/users/detail-movie/[id]/page.js"
+    ],
+    "/pages/admin/list-category/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/pages/admin/list-category/page.css",
+      "static/chunks/app/pages/admin/list-category/page.js"
+    ],
+    "/pages/admin/add-movie/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/pages/admin/add-movie/page.css",
+      "static/chunks/app/pages/admin/add-movie/page.js"
+    ],
+    "/pages/admin/list-transaction/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/pages/admin/list-transaction/page.css",
+      "static/chunks/app/pages/admin/list-transaction/page.js"
+    ]
+  }
 }

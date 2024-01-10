@@ -10,7 +10,7 @@ import { CategoryValues } from "@/types/category";
 //------------------------------------------------------------
 
 export const fetchCategories = createAsyncThunk(
-  "category/fetch",
+  "categories/fetch",
   async (thunkAPI, { rejectWithValue }) => {
     const response = await fetch("http://localhost:5000/api/v1/categories");
 

@@ -40,15 +40,15 @@ export interface UpdateTransactionProps {
   setModalUpdateTransaction: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalUpdateTransaction: () => void;
   dataTransaction: any;
-  // fetchTransaction: () => void;
+  fetchTransactions: () => void;
 }
 
 function UpdateTransaction({
   dataTransaction,
-  // fetchTransaction,
   modalUpdateTransaction,
   setModalUpdateTransaction,
   closeModalUpdateTransaction,
+  fetchTransactions,
 }: UpdateTransactionProps) {
   // session
   const { data: session, status } = useSession();
@@ -81,8 +81,8 @@ function UpdateTransaction({
           theme: "colored",
           style: { marginTop: "65px" },
         });
+        fetchTransactions();
         setModalUpdateTransaction(false);
-        // fetchTransaction();
       }
     } catch (e) {
       console.log("API Error:", e);
@@ -139,8 +139,8 @@ function UpdateTransaction({
               theme: "colored",
               style: { marginTop: "65px" },
             });
+            fetchTransactions();
             setModalUpdateTransaction(false);
-            // fetchTransaction();
           }
         }
       });
@@ -191,7 +191,7 @@ function UpdateTransaction({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md md:max-w-4xl transform overflow-hidden rounded-2xl bg-[#0D0D0D] p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-md md:max-w-4xl my-16 transform overflow-hidden rounded-2xl bg-[#0D0D0D] p-6 text-left align-middle shadow-xl transition-all">
                   <form>
                     <div className="mb-5 flex justify-between">
                       <p className="w-full font-bold text-2xl text-[#D2D2D2]">
@@ -226,127 +226,131 @@ function UpdateTransaction({
                       )}
                     </div>
 
-                    <table className="min-w-full mb-10 text-left text-sm font-light">
-                      <thead className="border-b bg-[#0D0D0D] font-medium">
-                        <tr>
-                          <th
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
-                          >
-                            Username
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
-                          >
-                            Gender
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
-                          >
-                            Phone
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
-                          >
-                            Address
-                          </th>
-                        </tr>
-                      </thead>
+                    <div className="w-full mb-10 overflow-x-auto">
+                      <table className="w-full text-sm font-light">
+                        <thead className="border-b bg-[#0D0D0D] font-medium">
+                          <tr>
+                            <th
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
+                            >
+                              Username
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
+                            >
+                              Gender
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
+                            >
+                              Phone
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
+                            >
+                              Address
+                            </th>
+                          </tr>
+                        </thead>
 
-                      <tbody>
-                        <tr className="border-b bg-[#232323] font-medium">
-                          <td
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] text-center"
-                          >
-                            {dataTransaction?.buyer?.username}
-                          </td>
-                          <td
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] text-center"
-                          >
-                            {dataTransaction?.buyer?.gender}
-                          </td>
-                          <td
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] text-center"
-                          >
-                            {dataTransaction?.buyer?.phone}
-                          </td>
-                          <td
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] text-center"
-                          >
-                            {dataTransaction?.buyer?.address}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                        <tbody>
+                          <tr className="border-b bg-[#232323] font-medium">
+                            <td
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] text-center"
+                            >
+                              {dataTransaction?.buyer?.username}
+                            </td>
+                            <td
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] text-center"
+                            >
+                              {dataTransaction?.buyer?.gender}
+                            </td>
+                            <td
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] text-center"
+                            >
+                              {dataTransaction?.buyer?.phone}
+                            </td>
+                            <td
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] text-center"
+                            >
+                              {dataTransaction?.buyer?.address}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
 
-                    <table className="min-w-full text-left text-sm font-light">
-                      <thead className="border-b bg-[#0D0D0D] font-medium">
-                        <tr>
-                          <th
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
-                          >
-                            Title
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
-                          >
-                            Release Date
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
-                          >
-                            Genre
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
-                          >
-                            Price
-                          </th>
-                        </tr>
-                      </thead>
+                    <div className="w-full mb-10 overflow-x-auto">
+                      <table className="w-full text-sm font-light">
+                        <thead className="border-b bg-[#0D0D0D] font-medium">
+                          <tr>
+                            <th
+                              scope="col"
+                              className="px-6 py-4 text-[#D2D2D2] font-bold text-center"
+                            >
+                              Title
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
+                            >
+                              Release&nbsp;Date
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
+                            >
+                              Genre
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] font-bold text-center"
+                            >
+                              Price
+                            </th>
+                          </tr>
+                        </thead>
 
-                      <tbody>
-                        <tr className="border-b bg-[#232323] font-medium">
-                          <td
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] text-center"
-                          >
-                            {dataTransaction?.movie?.title}
-                          </td>
-                          <td
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] text-center"
-                          >
-                            {moment(
-                              dataTransaction?.movie?.release_date
-                            ).format("DD MMMM YYYY")}
-                          </td>
-                          <td
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] text-center"
-                          >
-                            {dataTransaction?.buyer?.category} -
-                          </td>
-                          <td
-                            scope="col"
-                            className="px-2 py-4 text-[#D2D2D2] text-center"
-                          >
-                            {dataTransaction?.movie?.price}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                        <tbody>
+                          <tr className="border-b bg-[#232323] font-medium">
+                            <td
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] text-center"
+                            >
+                              {dataTransaction?.movie?.title}
+                            </td>
+                            <td
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] text-center"
+                            >
+                              {moment(
+                                dataTransaction?.movie?.release_date
+                              ).format("DD MMMM YYYY")}
+                            </td>
+                            <td
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] text-center"
+                            >
+                              {dataTransaction?.buyer?.category} -
+                            </td>
+                            <td
+                              scope="col"
+                              className="px-2 py-4 text-[#D2D2D2] text-center"
+                            >
+                              {dataTransaction?.movie?.price}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
 
                     <div className="mt-6 flex items-center justify-end gap-x-6">
                       <button

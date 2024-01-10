@@ -83,7 +83,7 @@ export default function ModalWatchMovie({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full mt-20 mb-10 max-w-md md:max-w-6xl transform overflow-hidden rounded-2xl bg-[#0D0D0D] p-5 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-md md:max-w-6xl mt-20 mb-10 transform overflow-hidden rounded-2xl bg-[#0D0D0D] p-5 text-left align-middle shadow-xl transition-all">
                   <div className="w-full px-15 pb-10 max-md:px-10 max-sm:px-5">
                     <div className="px-20 max-md:px-0">
                       <div className="mb-5 flex justify-between items-center">

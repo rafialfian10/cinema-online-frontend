@@ -14,6 +14,7 @@ import moment from "moment";
 // components redux
 import { useDispatch } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/redux/store";
+import { fetchTransactionByUser } from "@/redux/features/transactionSlice";
 import {
   fetchUserAuth,
   updateUser,
@@ -33,7 +34,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 // image
 import defaultPhoto from "@/assets/img/default-photo.png";
-import { fetchTransactionByUser } from "@/redux/features/transactionSlice";
 // ------------------------------------------------------------
 interface ProfileProps {
   params: { id: string };
@@ -92,14 +92,6 @@ function ProfileUser({ params }: ProfileProps) {
   }, [user, setValue]);
 
   const onSubmit: SubmitHandler<CheckAuthValues> = async (data) => {
-    // console.log('data', data);
-    const config = {
-      headers: {
-        "Content-type": "multipart/form-data",
-        Authorization: "Bearer " + userAuth?.data?.token,
-      },
-    };
-
     const formData = new FormData();
     formData.append("username", data?.username);
     formData.append("email", data?.email);
@@ -147,13 +139,6 @@ function ProfileUser({ params }: ProfileProps) {
     const selectedFile = event.target.files && event.target.files[0];
 
     if (selectedFile) {
-      const config = {
-        headers: {
-          "Content-type": "multipart/form-data",
-          Authorization: "Bearer " + userAuth?.data?.token,
-        },
-      };
-
       const formData = new FormData();
       formData.append("photo", selectedFile);
 

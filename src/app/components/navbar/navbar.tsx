@@ -113,9 +113,9 @@ export default function Navbar() {
   };
 
   // Filtered movie
-  // const movies = [{title: "123123123",}]
-  const filteredMovies = movies?.filter((movie: any) =>
-    movie?.title.toLowerCase().includes(search.toLowerCase())
+  const filteredMovies = movies?.filter(
+    (movie: any) =>
+      movie?.title && movie?.title.toLowerCase().includes(search.toLowerCase())
   );
 
   useEffect(() => {

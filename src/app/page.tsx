@@ -43,9 +43,9 @@ export default function Home({
       <Swipers movies={movies} />
       <CardMovie currentMovies={currentMovies} />
       <PaginationMovie
-        totalMovies={movies.length}
+        totalMovies={movies?.length}
         firstPage={start > 0}
-        lastPage={end < movies.length}
+        lastPage={end < movies?.length}
       />
     </section>
   );
