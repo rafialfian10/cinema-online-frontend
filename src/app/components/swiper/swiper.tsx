@@ -151,7 +151,7 @@ export default function Swipers({ movies }: MoviesProps) {
         const response = await dispatch(
           createTransaction({ formData, session })
         );
-
+          
         if (response.payload && response.payload.status === 200) {
           (window as any).snap.pay(response.payload.data.token, {
             onSuccess: function (result: any) {
@@ -171,7 +171,7 @@ export default function Swipers({ movies }: MoviesProps) {
               );
               dispatch(fetchTransactionByUser({ session, status }))
               window.location.replace(
-                `/pages/users/profile/${userCheckAuth?.id}`
+                `/pages/users/profile-user/${userCheckAuth?.id}`
               );
             },
             onPending: function (result: any) {

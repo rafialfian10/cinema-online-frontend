@@ -1,10 +1,7 @@
-/* eslint-disable @next/next/no-async-client-component */
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 // components react
 import { useEffect } from "react";
-import { useSession } from "next-auth/react";
 // import { Suspense } from "react";
 
 // components redux
@@ -18,7 +15,7 @@ import CardMovie from "@/app/components/card-movie/cardMovie";
 import Swipers from "./components/swiper/swiper";
 //---------------------------------------------------------------
 
-export default async function Home({
+export default function Home({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -27,12 +24,10 @@ export default async function Home({
   const dispatch = useDispatch<AppDispatch>();
 
   const movies = useAppSelector((state: RootState) => state.movieSlice.movies);
-  const loading = useAppSelector(
-    (state: RootState) => state.movieSlice.loading
-  );
 
   useEffect(() => {
     dispatch(fetchMovies());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // pagination

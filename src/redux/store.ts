@@ -8,6 +8,7 @@ import categorySlice from "./features/categorySlice";
 import movieSlice from "./features/movieSlice";
 import userSlice from "./features/userSlice.";
 import transactionSlice from "./features/transactionSlice";
+import premiumSlice from "./features/premiumSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     movieSlice: movieSlice,
     categorySlice: categorySlice,
     transactionSlice: transactionSlice,
+    premiumSlice: premiumSlice,
   },
 });
 

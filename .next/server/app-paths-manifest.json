@@ -3,6 +3,6 @@
   "/not-found": "app/not-found.js",
   "/pages/users/my-list-movie/page": "app/pages/users/my-list-movie/page.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/pages/users/profile-user/[id]/page": "app/pages/users/profile-user/[id]/page.js",
-  "/pages/users/detail-movie/[id]/page": "app/pages/users/detail-movie/[id]/page.js"
+  "/pages/users/detail-movie/[id]/page": "app/pages/users/detail-movie/[id]/page.js",
+  "/pages/users/profile-user/[id]/page": "app/pages/users/profile-user/[id]/page.js"
 }

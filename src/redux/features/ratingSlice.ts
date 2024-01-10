@@ -115,14 +115,14 @@ export const deleterating = createAsyncThunk(
 
 type ratingState = {
   ratings: RatingValues[];
-  rating: RatingValues | null;
+  rating: RatingValues;
   loading: boolean;
   error: null | any;
 };
 
 const initialStateRating: ratingState = {
   ratings: [] as RatingValues[],
-  rating: null,
+  rating: {} as RatingValues,
   loading: false,
   error: null,
 };
@@ -131,8 +131,11 @@ const ratingSlice = createSlice({
   name: "ratingSlice",
   initialState: initialStateRating,
   reducers: {
-    Rating: (state, action: PayloadAction<RatingValues[]>) => {
+    Ratings: (state, action: PayloadAction<RatingValues[]>) => {
       state.ratings = action.payload;
+    },
+    Rating: (state, action: PayloadAction<RatingValues>) => {
+      state.rating = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -200,5 +203,5 @@ const ratingSlice = createSlice({
   },
 });
 
-export const { Rating } = ratingSlice.actions;
+export const { Ratings, Rating } = ratingSlice.actions;
 export default ratingSlice.reducer;

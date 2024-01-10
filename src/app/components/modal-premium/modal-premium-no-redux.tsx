@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 // components next
@@ -10,13 +9,11 @@ import { useRouter } from "next/navigation";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useContext } from "react";
 
-// components redux
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
-import { updatePremiumUser } from "@/redux/features/premiumSlice";
-
 // contexts
 import { AuthContext } from "@/contexts/authContext";
+
+// api
+import { API } from "@/app/api/api";
 
 // type
 import { UserAuth } from "@/types/userAuth";
@@ -25,7 +22,7 @@ import { UserAuth } from "@/types/userAuth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// images
+// image
 import icon from "@/assets/img/icon.png";
 import attacment from "@/assets/img/attacment.png";
 //--------------------------------------------------------------------
@@ -53,24 +50,29 @@ export default function ModalPremium({
   const { data: session, status } = useSession();
   const userAuth: UserAuth | undefined = session?.user;
 
-  // dispatch
-  const dispatch = useDispatch<AppDispatch>();
-
   const router = useRouter();
 
   // context check auth
   const { userCheckAuth, setUserCheckAuth } = useContext(AuthContext);
-  
+
   //handle premium
   const handlePremium = async (e: any) => {
     e.preventDefault();
+
     try {
+      const config = {
+        headers: {
+          "Content-type": "multipart/form-data",
+          Authorization: "Bearer " + userAuth?.data?.token,
+        },
+      };
+
       const dataPremi: any = {
-        price: 100000,
+        price: 150000,
       };
 
       const formData = new FormData();
-      formData.append("price", dataPremi?.price);
+      formData.append("price", dataPremi.price);
 
       if (userAuth?.data?.role === "admin") {
         toast.error("Admin is not allowed to make transactions!", {
@@ -87,12 +89,15 @@ export default function ModalPremium({
         router.push("/pages/admin/list-movie");
         return;
       } else {
-        const response = await dispatch(
-          updatePremiumUser({ formData, id: userCheckAuth?.premi?.id, session })
+        const response = await API.patch(
+          `/premi_user/${userCheckAuth?.premi?.id}`,
+          formData,
+          config
         );
-
-        if (response.payload && response.payload.status === 200) {
-          (window as any).snap.pay(response.payload.data.token, {
+        if (response.data.status === 200) {
+          console.log(response);
+          
+          (window as any).snap.pay(response.data.data.token, {
             onSuccess: function (result: any) {
               toast.success("Thank you for subscribing to premium", {
                 position: "top-right",
@@ -105,8 +110,8 @@ export default function ModalPremium({
                 theme: "colored",
                 style: { marginTop: "65px" },
               });
-              fetchUser();
               setModalPremium(false);
+              fetchUser();
               window.location.replace(`/`);
             },
             onPending: function (result: any) {
@@ -213,7 +218,7 @@ export default function ModalPremium({
                 <p className="mb-3 text-xl font-bold text-[#D2D2D2]">
                   Upgrade premium
                 </p>
-                <p className="mb-3 text-[#D2D2D2]">Total : Rp. 100.000,00</p>
+                <p className="mb-3 text-[#D2D2D2]">Total : Rp. 150.000,00</p>
                 <button
                   type="button"
                   className="w-full flex justify-center items-center rounded-md text-center px-4 py-2 text-md font-bold text-[#D2D2D2] bg-[#CD2E71] hover:opacity-80"

@@ -60,7 +60,7 @@ export default function DetailMovie({ params }: IdParamsProps) {
   );
   const transactions = useAppSelector(
     (state: RootState) => state.transactionSlice.transactions
-  );
+  );  
 
   useEffect(() => {
     dispatch(fetchMovie({ id: params?.id }));
@@ -169,7 +169,7 @@ export default function DetailMovie({ params }: IdParamsProps) {
                 }
               );
               dispatch(fetchTransactionByUser({ session, status }));
-              window.location.replace(`/`);
+              window.location.replace(`/pages/users/profile-user/${userCheckAuth?.id}`);
             },
             onPending: function (result: any) {
               toast.warning("please make payment first", {

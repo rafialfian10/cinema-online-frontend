@@ -35,6 +35,8 @@ export const fetchMovie = createAsyncThunk(
       const response = await fetch(`http://localhost:5000/api/v1/movie/${id}`);
       if (response.status === 200) {
         const result = await response.json();
+        console.log(result);
+        
         
         return result.data;
       }
@@ -137,14 +139,14 @@ export const deleteMovie = createAsyncThunk(
 
 type movieState = {
   movies: MovieValues[];
-  movie: MovieValues | null;
+  movie: MovieValues;
   loading: boolean;
   error: null | any;
 };
 
 const initialStateMovie: movieState = {
   movies: [] as MovieValues[],
-  movie: null,
+  movie: {} as MovieValues,
   loading: false,
   error: null,
 };
@@ -153,10 +155,13 @@ const movieSlices = createSlice({
   name: "movieSlice",
   initialState: initialStateMovie,
   reducers: {
-    Movie: (state, action: PayloadAction<MovieValues[]>) => {
+    Movies: (state, action: PayloadAction<MovieValues[]>) => {
       state.movies = action.payload;
       // console.log("state: ", state);
       // console.log("action: ", action.payload);
+    },
+    Movie: (state, action: PayloadAction<MovieValues>) => {
+      state.movie = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -249,5 +254,5 @@ const movieSlices = createSlice({
   },
 });
 
-export const { Movie } = movieSlices.actions;
+export const { Movies, Movie } = movieSlices.actions;
 export default movieSlices.reducer;

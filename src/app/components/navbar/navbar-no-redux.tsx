@@ -12,11 +12,8 @@ import { useState, useEffect, Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-// components redux
-import { useDispatch } from "react-redux";
-import { AppDispatch, RootState, useAppSelector } from "@/redux/store";
-import { fetchUserAuth } from "@/redux/features/userSlice.";
-import { updatePremiumExpired } from "@/redux/features/premiumSlice";
+// api
+import { API } from "@/app/api/api";
 
 // components
 import Register from "../register/registerForm";
@@ -33,12 +30,14 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// css
-import "./navbar.module.css";
-
-// images
+// image
 import icon from "@/assets/img/icon.png";
 import defaultPhoto from "@/assets/img/user.png";
+import listFilm from "@/assets/img/list-film.png";
+import logout from "@/assets/img/logout.png";
+
+// css
+import "./navbar.module.css";
 //---------------------------------------------------------------------
 
 function classNames(...classes: any[]) {
@@ -50,19 +49,13 @@ export default function Navbar() {
   const { data: session, status } = useSession();
   const userAuth: UserAuth | undefined = session?.user;
 
-  // dispatch
-  const dispatch = useDispatch<AppDispatch>();
-
-  const user = useAppSelector((state: RootState) => state.userSlice.user);
-  const movies = useAppSelector((state: RootState) => state.movieSlice.movies);
-  
-  useEffect(() => {
-    if (status === "authenticated" && userAuth?.data?.token) {
-      dispatch(fetchUserAuth({ session, status }));
-    }
-  }, []);
-
   const router = useRouter();
+
+  // state user
+  const [user, setUser] = useState<any>();
+  
+  // state movies
+  const [movies, setMovies] = useState<any[]>([]);
 
   // State search
   const [search, setSearch] = useState("");
@@ -106,6 +99,49 @@ export default function Navbar() {
     setModalPremium(false);
   }
 
+  // fetch user
+  async function fetchUser() {
+    if (status === "authenticated" && userAuth?.data?.token) {
+      const config = {
+        headers: {
+          "Content-type": "multipart/form-data",
+          Authorization: "Bearer " + userAuth?.data?.token,
+        },
+      };
+
+      try {
+        const response = await fetch(`http://localhost:5000/api/v1/user`, {
+          cache: "no-store",
+          headers: config.headers,
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user auth");
+        }
+
+        const userData = await response.json();
+        setUser(userData.data);
+      } catch (error) {
+        console.error("Error fetching user auth:", error);
+      }
+    }
+  }
+
+  // fetch data movies
+  async function fetchMovies() {
+    try {
+      const moviesData = await getAllMovies();
+      setMovies(moviesData.data);
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchUser();
+    fetchMovies();
+  }, [session]);
+
   // handle search
   const handleSearchMovie = (event: any) => {
     setSearch(event.target.value);
@@ -113,7 +149,6 @@ export default function Navbar() {
   };
 
   // Filtered movie
-  // const movies = [{title: "123123123",}]
   const filteredMovies = movies?.filter((movie: any) =>
     movie?.title.toLowerCase().includes(search.toLowerCase())
   );
@@ -166,8 +201,8 @@ export default function Navbar() {
   };
 
   // function date
-  const activatedDate = Date.parse(user?.premi?.activated_at ?? "") || NaN;
-  const expiredDate = Date.parse(user?.premi?.expired_at ?? "") || NaN;
+  const activatedDate = Date.parse(user?.premi?.activated_at || null);
+  const expiredDate = Date.parse(user?.premi?.expired_at || null);
 
   useEffect(() => {
     if (!isNaN(activatedDate) && !isNaN(expiredDate)) {
@@ -184,30 +219,17 @@ export default function Navbar() {
 
         if (timeRemaining <= 0) {
           clearInterval(interval);
-          const response = await dispatch(
-            updatePremiumExpired({ id: user?.premi?.id })
-          );
-  
-          if (response.payload && response.payload.status === 200) {
-            dispatch(fetchUserAuth({ session, status }));
+          const res = await API.patch(`/premi_expired/${user?.premi?.id}`);
+          if (res.status === 200) {
+            fetchUser();
           }
         } else {
           const years: number = Math.floor(timeRemaining / millisecondsInYear);
-          const months: number = Math.floor(
-            (timeRemaining % millisecondsInYear) / millisecondsInMonth
-          );
-          const days: number = Math.floor(
-            (timeRemaining % millisecondsInMonth) / millisecondsInDay
-          );
-          const hours: number = Math.floor(
-            (timeRemaining % millisecondsInDay) / millisecondsInHour
-          );
-          const minutes: number = Math.floor(
-            (timeRemaining % millisecondsInHour) / millisecondsInMinute
-          );
-          const seconds: number = Math.floor(
-            (timeRemaining % millisecondsInMinute) / millisecondsInSecond
-          );
+          const months: number = Math.floor((timeRemaining % millisecondsInYear) / millisecondsInMonth);
+          const days: number = Math.floor((timeRemaining % millisecondsInMonth) / millisecondsInDay);
+          const hours: number = Math.floor((timeRemaining % millisecondsInDay) / millisecondsInHour);
+          const minutes: number = Math.floor((timeRemaining % millisecondsInHour) / millisecondsInMinute);
+          const seconds: number = Math.floor((timeRemaining % millisecondsInMinute) / millisecondsInSecond);
 
           let dateString: string = "";
 
@@ -616,6 +638,7 @@ export default function Navbar() {
           </>
         )}
       </Disclosure>
+
       <Register
         modalRegister={modalRegister}
         closeModalRegister={closeModalRegister}
@@ -629,10 +652,21 @@ export default function Navbar() {
       />
       <ModalPremium
         modalPremium={modalPremium}
-        fetchUser={() => dispatch(fetchUserAuth({ session, status }))}
+        fetchUser={fetchUser}
         setModalPremium={setModalPremium}
         closeModalPremium={closeModalPremium}
       />
     </Fragment>
   );
+}
+
+async function getAllMovies() {
+  const response = await fetch("http://localhost:5000/api/v1/movies", {
+    cache: "no-cache",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  return await response.json();
 }

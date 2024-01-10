@@ -31,7 +31,7 @@ export default function SearchHome({
   };
 
   return (
-    <div className="w-full z-10">
+    <div className="w-full px-5 lg:px-0 z-10">
       <div className="flex justify-start">
         <div className="w-full">
           <div className="shadow-md rounded-lg bg-[#0D0D0D]">

@@ -106,7 +106,7 @@ export const fetchTransaction = createAsyncThunk(
       }
     } catch (error) {
       return rejectWithValue(
-        (error as Error).message || "Failed to fetch movie"
+        (error as Error).message || "Failed to fetch transaction"
       );
     }
   }
@@ -203,14 +203,14 @@ export const deleteTransaction = createAsyncThunk(
 
 type TransactionState = {
   transactions: TransactionValues[];
-  transaction: TransactionValues | null;
+  transaction: TransactionValues;
   loading: boolean;
   error: null | any;
 };
 
 const initialStateTransaction: TransactionState = {
   transactions: [] as TransactionValues[],
-  transaction: null,
+  transaction: {} as TransactionValues,
   loading: false,
   error: null,
 };
@@ -219,8 +219,11 @@ const transactionSlice = createSlice({
   name: "transactionSlice",
   initialState: initialStateTransaction,
   reducers: {
-    Transaction: (state, action: PayloadAction<TransactionValues[]>) => {
+    Transactions: (state, action: PayloadAction<TransactionValues[]>) => {
       state.transactions = action.payload;
+    },
+    Transaction: (state, action: PayloadAction<TransactionValues>) => {
+      state.transaction = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -318,5 +321,5 @@ const transactionSlice = createSlice({
   },
 });
 
-export const { Transaction } = transactionSlice.actions;
+export const { Transactions, Transaction } = transactionSlice.actions;
 export default transactionSlice.reducer;

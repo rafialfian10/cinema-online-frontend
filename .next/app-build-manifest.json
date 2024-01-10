@@ -6,11 +6,6 @@
       "static/css/app/page.css",
       "static/chunks/app/page.js"
     ],
-    "/loading": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/loading.js"
-    ],
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -22,16 +17,21 @@
       "static/chunks/main-app.js",
       "static/chunks/app/error.js"
     ],
+    "/loading": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/loading.js"
+    ],
     "/not-found": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/not-found.js"
     ],
-    "/pages/users/profile-user/[id]/page": [
+    "/pages/users/detail-movie/[id]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/pages/users/profile-user/[id]/page.css",
-      "static/chunks/app/pages/users/profile-user/[id]/page.js"
+      "static/css/app/pages/users/detail-movie/[id]/page.css",
+      "static/chunks/app/pages/users/detail-movie/[id]/page.js"
     ],
     "/pages/users/my-list-movie/page": [
       "static/chunks/webpack.js",
@@ -39,11 +39,11 @@
       "static/css/app/pages/users/my-list-movie/page.css",
       "static/chunks/app/pages/users/my-list-movie/page.js"
     ],
-    "/pages/users/detail-movie/[id]/page": [
+    "/pages/users/profile-user/[id]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/pages/users/detail-movie/[id]/page.css",
-      "static/chunks/app/pages/users/detail-movie/[id]/page.js"
+      "static/css/app/pages/users/profile-user/[id]/page.css",
+      "static/chunks/app/pages/users/profile-user/[id]/page.js"
     ]
   }
 }
