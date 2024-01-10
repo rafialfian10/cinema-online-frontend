@@ -30,6 +30,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 // image
 import defaultPhoto from "@/assets/img/default-photo.png";
+import { fetchTransactionByUser } from "@/redux/features/transactionSlice";
 // ------------------------------------------------------------
 
 interface ProfileProps {

@@ -10,7 +10,7 @@ import { TransactionValues } from "@/types/transaction";
 //------------------------------------------------------------
 
 export const fetchTransactions = createAsyncThunk(
-  "transaction/fetch",
+  "transactions/fetch",
   async ({ session }: { session: any }, { rejectWithValue }) => {
     const userAuth: UserAuth | undefined = session?.user;
 
@@ -43,7 +43,7 @@ export const fetchTransactions = createAsyncThunk(
 );
 
 export const fetchTransactionByUser = createAsyncThunk(
-  "user/fetch-transaction-by-user",
+  "transaction/fetch-transaction-by-user",
   async (
     { session, status }: { session: any; status: any },
     { rejectWithValue }
@@ -72,12 +72,42 @@ export const fetchTransactionByUser = createAsyncThunk(
         }
 
         const userData = await response.json();
+        
         return userData.data;
       } catch (error) {
         return rejectWithValue(
           (error as Error).message || "Failed to fetch transaction by user"
         );
       }
+    }
+  }
+);
+
+export const fetchTransaction = createAsyncThunk(
+  "transaction/fetch",
+  async (
+    { id, session }: { id: number, session: any },
+    { rejectWithValue }
+  ) => {
+    const userAuth: UserAuth | undefined = session?.user;
+    const config = {
+      headers: {
+        "Content-type": "multipart/form-data",
+        Authorization: "Bearer " + userAuth?.data?.token,
+      },
+    };
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/v1/transaction/${id}`, config);
+      if (response.status === 200) {
+        const result = await response.json();
+        
+        return result.data;
+      }
+    } catch (error) {
+      return rejectWithValue(
+        (error as Error).message || "Failed to fetch movie"
+      );
     }
   }
 );
@@ -173,14 +203,14 @@ export const deleteTransaction = createAsyncThunk(
 
 type TransactionState = {
   transactions: TransactionValues[];
-  searchData: TransactionValues[];
+  transaction: TransactionValues | null;
   loading: boolean;
   error: null | any;
 };
 
 const initialStateTransaction: TransactionState = {
   transactions: [] as TransactionValues[],
-  searchData: [] as TransactionValues[],
+  transaction: null,
   loading: false,
   error: null,
 };
@@ -219,6 +249,20 @@ const transactionSlice = createSlice({
       }
     );
     builder.addCase(fetchTransactionByUser.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+    builder.addCase(fetchTransaction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(
+      fetchTransaction.fulfilled,
+      (state, action: PayloadAction<TransactionValues>) => {
+        state.loading = false;
+        state.transaction = action.payload;
+      }
+    );
+    builder.addCase(fetchTransaction.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });

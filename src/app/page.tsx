@@ -1,23 +1,21 @@
-// components next
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+/* eslint-disable @next/next/no-async-client-component */
+/* eslint-disable react-hooks/exhaustive-deps */
+"use client";
 
 // components react
-import { Suspense } from "react";
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+// import { Suspense } from "react";
 
-// route auth
-import { Options } from "./api/auth/[...nextauth]/route";
+// components redux
+import { useDispatch } from "react-redux";
+import { AppDispatch, RootState, useAppSelector } from "@/redux/store";
+import { fetchMovies } from "@/redux/features/movieSlice";
 
 // components
 import PaginationMovie from "@/app/components/pagination-movie/paginationMovie";
 import CardMovie from "@/app/components/card-movie/cardMovie";
 import Swipers from "./components/swiper/swiper";
-
-// types
-import { UserAuth } from "@/types/userAuth";
-
-// libs
-import { getMovies } from "@/libs/movie";
 //---------------------------------------------------------------
 
 export default async function Home({
@@ -25,12 +23,17 @@ export default async function Home({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  // session
-  let session = await getServerSession(Options);
-  const userAuth: UserAuth | undefined = session?.user;
+  // dispatch
+  const dispatch = useDispatch<AppDispatch>();
 
-  const moviesResponse = await getMovies();
-  const movies = moviesResponse.props.data.data;
+  const movies = useAppSelector((state: RootState) => state.movieSlice.movies);
+  const loading = useAppSelector(
+    (state: RootState) => state.movieSlice.loading
+  );
+
+  useEffect(() => {
+    dispatch(fetchMovies());
+  }, []);
 
   // pagination
   const page = searchParams["page"] ?? "1";
@@ -52,16 +55,3 @@ export default async function Home({
     </section>
   );
 }
-
-// async function getAllMovies() {
-//   const response = await fetch('http://localhost:5000/api/v1/movies', {
-//     cache: 'default', // ada opsi lain, default, no-store, force-cache, reload, only-if-cached
-//     next: {revalidate: 3600}
-//   });
-
-//   if (!response.ok) {
-//     throw new Error('Failed to fetch data');
-//   }
-
-//   return await response.json();
-// }

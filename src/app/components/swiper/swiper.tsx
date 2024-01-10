@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 // components next
@@ -5,10 +6,13 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-// component react
+// components react
 import { useState, useEffect, useContext, useCallback } from "react";
 
-import { API } from "@/app/api/api";
+// components redux
+import { useDispatch } from "react-redux";
+import { AppDispatch, RootState, useAppSelector } from "@/redux/store";
+import { createTransaction, fetchTransactionByUser } from "@/redux/features/transactionSlice";
 
 // contexts
 import { AuthContext } from "@/contexts/authContext";
@@ -23,7 +27,6 @@ import SwiperCore, { Navigation, Pagination, Autoplay } from "swiper/modules";
 // alert
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// -----------------------------------------
 
 // style swiper
 import "swiper/css";
@@ -49,50 +52,28 @@ export default function Swipers({ movies }: MoviesProps) {
   // context check auth
   const { userCheckAuth, setUserCheckAuth } = useContext(AuthContext);
 
-  const router = useRouter();
+  // dispatch
+  const dispatch = useDispatch<AppDispatch>();
 
-  // state transaction by user login
-  const [userTransaction, setUserTransaction] = useState<any[]>([]);
+  const transactions = useAppSelector(
+    (state: RootState) => state.transactionSlice.transactions
+  );
+
+  useEffect(() => {
+    if (status === "authenticated" && userAuth?.data?.token) {
+      dispatch(fetchTransactionByUser({ session, status }));
+    }
+  }, []);
+  
+  const router = useRouter();
 
   // state width window
   const [windowWidth, setWindowWidth] = useState<number>(0);
 
-  // fetch user transaction by login
-  async function fetchUserTransaction() {
-    const config = {
-      headers: {
-        "Content-type": "multipart/form-data",
-        Authorization: "Bearer " + userAuth?.data?.token,
-      },
-    };
-
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/v1/transactions_by_user`,
-        {
-          cache: "no-store",
-          headers: config.headers,
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch data user transaction");
-      }
-
-      const userTransactionData = await response.json();
-
-      const dataTransaction = userTransactionData.data?.map(
-        (userTransaction: any) => ({
-          movieId: userTransaction?.movie?.id,
-          status: userTransaction?.status,
-        })
-      );
-
-      setUserTransaction(dataTransaction);
-    } catch (error) {
-      console.error("Error fetching data user transaction:", error);
-    }
-  }
+  // handle resize window
+  const handleResize = useCallback(() => {
+    setWindowWidth(window.innerWidth);
+  }, []);
 
   // function show login
   const showLogin = () => {
@@ -113,31 +94,10 @@ export default function Swipers({ movies }: MoviesProps) {
     }
   };
 
-  // handle resize window
-  const handleResize = useCallback(() => {
-    setWindowWidth(window.innerWidth);
-  }, []);
-
-  useEffect(() => {
-    setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   // handle buy movie
   const handleBuy = async (movie: any, e: any) => {
     e.preventDefault();
-
     try {
-      const config = {
-        headers: {
-          "Content-type": "multipart/form-data",
-          Authorization: "Bearer " + userAuth?.data?.token,
-        },
-      };
-
       const data: any = {
         movieId: movie?.id,
         buyerId: userCheckAuth?.id,
@@ -150,9 +110,9 @@ export default function Swipers({ movies }: MoviesProps) {
       formData.append("price", data.price);
 
       // Check if the movieId already exists in userTransaction
-      const movieAlreadyOwned = userTransaction.some((transaction) => {
+      const movieAlreadyOwned = transactions.some((transaction) => {
         return (
-          transaction.movieId === data.movieId &&
+          transaction.movie_id === data.movieId &&
           (transaction.status === "success" ||
             transaction.status === "approved")
         );
@@ -188,10 +148,12 @@ export default function Swipers({ movies }: MoviesProps) {
         router.push("/pages/admin/list-movie");
         return;
       } else {
-        const response = await API.post(`/transaction`, formData, config);
+        const response = await dispatch(
+          createTransaction({ formData, session })
+        );
 
-        if (response.data.status === 200) {
-          (window as any).snap.pay(response.data.data.token, {
+        if (response.payload && response.payload.status === 200) {
+          (window as any).snap.pay(response.payload.data.token, {
             onSuccess: function (result: any) {
               toast.success(
                 "Thank you for buying this film, please wait 1x24 hours because your transaction is in process",
@@ -207,7 +169,7 @@ export default function Swipers({ movies }: MoviesProps) {
                   style: { marginTop: "65px" },
                 }
               );
-              fetchUserTransaction();
+              dispatch(fetchTransactionByUser({ session, status }))
               window.location.replace(
                 `/pages/users/profile/${userCheckAuth?.id}`
               );
@@ -279,10 +241,12 @@ export default function Swipers({ movies }: MoviesProps) {
   }, []);
 
   useEffect(() => {
-    if (status === "authenticated") {
-      fetchUserTransaction();
-    }
-  }, [status]);
+    setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <div className="w-full mx-auto mt-20 md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl">

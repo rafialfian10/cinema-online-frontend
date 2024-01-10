@@ -9,11 +9,13 @@ import { useState, useContext, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Rating } from "primereact/rating";
 
+// components redux
+import { createRating } from "@/redux/features/ratingSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+
 // contexts
 import { AuthContext } from "@/contexts/authContext";
-
-// api
-import { API } from "@/app/api/api";
 
 // types
 import { UserAuth } from "@/types/userAuth";
@@ -39,6 +41,9 @@ export default function ModalRating({
   // session
   const { data: session, status } = useSession();
   const userAuth: UserAuth | undefined = session?.user;
+
+   // dispatch
+   const dispatch = useDispatch<AppDispatch>();
 
   // context check auth
   const { userCheckAuth, setUserCheckAuth } = useContext(AuthContext);
@@ -82,8 +87,9 @@ export default function ModalRating({
     formData.append("user_id", String(userCheckAuth?.id));
 
     try {
-      const res = await API.post("/rating", formData, config);
-      if (res.status === 200) {
+      const response = await dispatch(createRating({ formData, session }));
+
+      if (response.payload && response.payload.status === 200) {
         toast.success("Thank you for giving a rating!", {
           position: "top-right",
           autoClose: 2000,
@@ -152,8 +158,10 @@ export default function ModalRating({
                           <Rating
                             value={rating}
                             onChange={(e) => setRating(e.value ?? 0)}
-                            className="text-[#ffe234]"
+                            className="text-[#ffe234] flex justify-center gap-5 text-xl"
                             stars={5}
+                            width={30}
+                            height={30}
                             cancel={false}
                           />
                         </div>

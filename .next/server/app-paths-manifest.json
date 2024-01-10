@@ -1,18 +1,8 @@
 {
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/_not-found": "app/_not-found.js",
   "/page": "app/page.js",
-  "/pages/admin/add-category/page": "app/pages/admin/add-category/page.js",
-  "/pages/admin/add-movie/page": "app/pages/admin/add-movie/page.js",
-  "/pages/admin/list-category/page": "app/pages/admin/list-category/page.js",
-  "/pages/admin/list-movie/page": "app/pages/admin/list-movie/page.js",
-  "/pages/admin/list-transaction/page": "app/pages/admin/list-transaction/page.js",
-  "/pages/admin/update-category/page": "app/pages/admin/update-category/page.js",
-  "/pages/admin/update-movie/page": "app/pages/admin/update-movie/page.js",
-  "/pages/admin/update-transaction/page": "app/pages/admin/update-transaction/page.js",
+  "/not-found": "app/not-found.js",
   "/pages/users/my-list-movie/page": "app/pages/users/my-list-movie/page.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/pages/admin/profile-admin/[id]/page": "app/pages/admin/profile-admin/[id]/page.js",
-  "/pages/users/detail-movie/[id]/page": "app/pages/users/detail-movie/[id]/page.js",
-  "/pages/users/profile-user/[id]/page": "app/pages/users/profile-user/[id]/page.js"
+  "/pages/users/profile-user/[id]/page": "app/pages/users/profile-user/[id]/page.js",
+  "/pages/users/detail-movie/[id]/page": "app/pages/users/detail-movie/[id]/page.js"
 }

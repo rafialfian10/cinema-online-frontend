@@ -10,7 +10,7 @@ import { MovieValues } from "@/types/movie";
 //------------------------------------------------------------
 
 export const fetchMovies = createAsyncThunk(
-  "movie/fetch",
+  "movies/fetch",
   async (thunkAPI, { rejectWithValue }) => {
     const response = await fetch("http://localhost:5000/api/v1/movies");
 
@@ -21,6 +21,27 @@ export const fetchMovies = createAsyncThunk(
       }
     } catch (error) {
       return rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchMovie = createAsyncThunk(
+  "movie/fetch",
+  async (
+    { id }: { id: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/v1/movie/${id}`);
+      if (response.status === 200) {
+        const result = await response.json();
+        
+        return result.data;
+      }
+    } catch (error) {
+      return rejectWithValue(
+        (error as Error).message || "Failed to fetch movie"
+      );
     }
   }
 );
@@ -116,14 +137,14 @@ export const deleteMovie = createAsyncThunk(
 
 type movieState = {
   movies: MovieValues[];
-  searchData: MovieValues[];
+  movie: MovieValues | null;
   loading: boolean;
   error: null | any;
 };
 
 const initialStateMovie: movieState = {
   movies: [] as MovieValues[],
-  searchData: [] as MovieValues[],
+  movie: null,
   loading: false,
   error: null,
 };
@@ -155,6 +176,20 @@ const movieSlices = createSlice({
       state.loading = false;
       state.error = action.error.message;
       // state.error = action.payload;
+    });
+    builder.addCase(fetchMovie.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(
+      fetchMovie.fulfilled,
+      (state, action: PayloadAction<MovieValues>) => {
+        state.loading = false;
+        state.movie = action.payload;
+      }
+    );
+    builder.addCase(fetchMovie.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
     });
     builder.addCase(createMovie.pending, (state) => {
       state.loading = true;

@@ -81,7 +81,7 @@ export const updateUserPhoto = createAsyncThunk(
   "user/update-user-photo",
   async (
     { formData, id, session }: { formData: any; id: number; session: any },
-    { rejectWithValue }
+    { dispatch, rejectWithValue }
   ) => {
     const userAuth: UserAuth | undefined = session?.user;
 
@@ -97,6 +97,7 @@ export const updateUserPhoto = createAsyncThunk(
 
       if (response.status === 200) {
         const result = await response.data;
+        // dispatch(fetchUserAuth({ session, status: "authenticated" }));
         return result;
       }
     } catch (error) {

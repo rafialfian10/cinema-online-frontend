@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 // components next
@@ -57,7 +58,7 @@ export default function Navbar() {
 
   // state user
   const [user, setUser] = useState<any>();
-
+  
   // state movies
   const [movies, setMovies] = useState<any[]>([]);
 
@@ -229,44 +230,29 @@ export default function Navbar() {
           }
         } else {
           const years: number = Math.floor(timeRemaining / millisecondsInYear);
-          const months: number = Math.floor(
-            (timeRemaining % millisecondsInYear) / millisecondsInMonth
-          );
-          const days: number = Math.floor(
-            (timeRemaining % millisecondsInMonth) / millisecondsInDay
-          );
-          const hours: number = Math.floor(
-            (timeRemaining % millisecondsInDay) / millisecondsInHour
-          );
-          const minutes: number = Math.floor(
-            (timeRemaining % millisecondsInHour) / millisecondsInMinute
-          );
-          const seconds: number = Math.floor(
-            (timeRemaining % millisecondsInMinute) / millisecondsInSecond
-          );
+          const months: number = Math.floor((timeRemaining % millisecondsInYear) / millisecondsInMonth);
+          const days: number = Math.floor((timeRemaining % millisecondsInMonth) / millisecondsInDay);
+          const hours: number = Math.floor((timeRemaining % millisecondsInDay) / millisecondsInHour);
+          const minutes: number = Math.floor((timeRemaining % millisecondsInHour) / millisecondsInMinute);
+          const seconds: number = Math.floor((timeRemaining % millisecondsInMinute) / millisecondsInSecond);
 
           let dateString: string = "";
 
           if (years > 0) {
             dateString += ` ${years} year,`;
           }
-
           if (months > 0) {
             dateString += ` ${months} month,`;
           }
-
           if (days > 0) {
             dateString += ` ${days} day,`;
           }
-
           if (hours > 0) {
             dateString += ` ${hours}:`;
           }
-
           if (minutes > 0) {
             dateString += ` ${minutes}:`;
           }
-
           if (seconds > 0) {
             dateString += ` ${seconds}`;
           }
