@@ -8,6 +8,7 @@ import { API } from "@/app/api/api";
 import { UserAuth } from "@/types/userAuth";
 import { CheckAuthValues } from "@/types/checkAuth";
 import { ProfileValues } from "@/types/profile";
+import { RegisterValues } from "@/types/register";
 //------------------------------------------------------------
 
 export const fetchUserAuth = createAsyncThunk(
@@ -27,22 +28,53 @@ export const fetchUserAuth = createAsyncThunk(
       };
   
       try {
-        const response = await fetch(`http://localhost:5000/api/v1/user`, {
-          cache: "no-store",
-          headers: config.headers,
-        });
+        // option 1
+        const response = await API.get(`/user`, config);
 
-        if (!response.ok) {
+        if (response.status !== 200) {
           throw new Error("Failed to fetch user auth");
         }
   
-        const userData = await response.json();
-        return userData.data;
+        const result = await response.data.data;
+        return result;
+
+        // option 2
+        // const response = await fetch(`http://localhost:5000/api/v1/user`, {
+        //   cache: "no-store",
+        //   headers: config.headers,
+        // });
+
+        // if (!response.ok) {
+        //   throw new Error("Failed to fetch user auth");
+        // }
+  
+        // const userData = await response.json();
+        // return userData.data;
       } catch (error) {
         return rejectWithValue(
           (error as Error).message || "Failed to fetch user auth"
         );
       }
+    }
+  }
+);
+
+export const registerUser = createAsyncThunk(
+  "user/register",
+  async (
+    { formData }: { formData: any },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await API.post("/register", formData);
+      if (response.status === 200) {
+        const result = await response.data;
+        return result;
+      }
+    } catch (error) {
+      return rejectWithValue(
+        (error as Error).message || "Failed to register"
+      );
     }
   }
 );
@@ -140,8 +172,8 @@ export const deleteUser = createAsyncThunk(
 
 type userState = {
   user: CheckAuthValues;
-  userPhoto: ProfileValues
-  searchData: CheckAuthValues;
+  userPhoto: ProfileValues;
+  register: RegisterValues;
   loading: boolean;
   error: null | any;
 };
@@ -149,7 +181,7 @@ type userState = {
 const initialStateUser: userState = {
   user: {} as CheckAuthValues,
   userPhoto: {} as ProfileValues,
-  searchData: {} as CheckAuthValues,
+  register: {} as RegisterValues,
   loading: false,
   error: null,
 };
@@ -158,6 +190,9 @@ const userSlices = createSlice({
   name: "userlice",
   initialState: initialStateUser,
   reducers: {
+    Register: (state, action: PayloadAction<RegisterValues>) => {
+      state.register = action.payload;
+    },
     User: (state, action: PayloadAction<CheckAuthValues>) => {
       state.user = action.payload;
     },
@@ -179,6 +214,21 @@ const userSlices = createSlice({
     builder.addCase(fetchUserAuth.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
+    });
+    builder.addCase(registerUser.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(
+      registerUser.fulfilled,
+      (state, action: PayloadAction<RegisterValues>) => {
+        state.loading = false;
+        state.register = action.payload;
+      }
+    );
+    builder.addCase(registerUser.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+      // state.error = action.payload;
     });
     builder.addCase(updateUser.pending, (state) => {
       state.loading = true;
@@ -226,5 +276,5 @@ const userSlices = createSlice({
   },
 });
 
-export const { User, UserPhoto } = userSlices.actions;
+export const { User, UserPhoto, Register } = userSlices.actions;
 export default userSlices.reducer;

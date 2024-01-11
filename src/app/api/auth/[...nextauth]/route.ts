@@ -1,11 +1,15 @@
 // components next auth
 // import NextAuth from 'next-auth';
-import NextAuth, { AuthOptions } from "next-auth";
+import NextAuth, { AuthOptions, NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 // github provider
 import GitHubProvider from "next-auth/providers/github";
 import { GithubProfile } from "next-auth/providers/github";
+
+// google provider
+import GoogleProvider from "next-auth/providers/google";
+import { GoogleProfile } from "next-auth/providers/google";
 
 // api
 import { API } from "../../api";

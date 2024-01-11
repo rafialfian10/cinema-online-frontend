@@ -3,7 +3,7 @@ import axios from "axios";
 // -------------------------------------
 
 export const API = axios.create({
-  baseURL: "http://localhost:5000/api/v1"
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
 });
 
 // export const setAuthToken = (token: string) => {

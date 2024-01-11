@@ -33,8 +33,9 @@ library.add(faEye, faEyeSlash);
 // styles
 import styles from "./login.module.css";
 
-// image
+// images
 import github from "@/assets/img/github.png";
+import google from "@/assets/img/google.png";
 //--------------------------------------------------------------------
 
 export interface LoginProps {
@@ -271,8 +272,8 @@ export default function Login({
                     href="/api/auth/signin"
                     className="w-full bg-[#3E3E3E] rounded-md p-1.5 flex justify-center items-center hover:opacity-80"
                   >
-                    <Image src={github} alt="github" className="w-7 h-7 mr-2" />
-                    <span>Sign In with Github</span>
+                    <Image src={google} alt="google" className="w-7 h-7 mr-2" />
+                    <span>Sign In with Google</span>
                   </Link>
                 </Dialog.Panel>
               </Transition.Child>

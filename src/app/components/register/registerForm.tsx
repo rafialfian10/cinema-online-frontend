@@ -6,8 +6,10 @@ import { Dialog, Transition } from "@headlessui/react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AxiosError } from "axios";
 
-// api
-import { API } from "@/app/api/api";
+// components redux
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { registerUser } from "@/redux/features/userSlice.";
 
 // types
 import { RegisterValues } from "@/types/register";
@@ -37,6 +39,9 @@ export default function Register({
   closeModalRegister,
   openModalLogin,
 }: RegisterProps) {
+  // dispatch
+  const dispatch = useDispatch<AppDispatch>();
+
   // state password visible
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
@@ -63,15 +68,15 @@ export default function Register({
     cpassword: "Confirm password is required",
   };
 
-  // validasi password dengan regex
+  // password validation regex
   const passwordValidationRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-  // Function cek validasi password
+  // Function check password validation
   const isPasswordValid = (password: string): boolean => {
     return passwordValidationRegex.test(password); // test berfungsi untuk menguji apakah value sesuai dengan validasi regex
   };
 
-  // handle validate password
+  // handle password validation
   const handleValidatePasswordChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -86,7 +91,7 @@ export default function Register({
     }
   };
 
-  // handle konfirmasi password
+  // handle confirm password
   const handleConfirmPasswordChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -112,12 +117,11 @@ export default function Register({
     formState: { errors },
   } = useForm<RegisterValues>();
 
-  const onSubmit: SubmitHandler<RegisterValues> = async (data) => {
+  const onSubmit: SubmitHandler<RegisterValues> = async (formData) => {
     try {
-      const res = await API.post("/register", data);
-      console.log("data", res);
+      const response = await dispatch(registerUser({ formData }));
 
-      if (res.status === 200) {
+      if (response.payload && response.payload.status === 200) {
         toast.success("Register successfully!", {
           position: "top-right",
           autoClose: 2000,

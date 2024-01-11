@@ -12,13 +12,15 @@ import { RatingValues } from "@/types/rating";
 export const fetchRatings = createAsyncThunk(
   "ratings/fetch",
   async (thunkAPI, { rejectWithValue }) => {
-    const response = await fetch("http://localhost:5000/api/v1/ratings");
-
     try {
-      if (response.status === 200) {
-        const result = await response.json();
-        return result.data;
+      const response = await API.get(`/ratings`);
+
+      if (response.status !== 200) {
+        throw new Error("Failed to ratings");
       }
+
+      const result = await response.data.data;
+      return result;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -27,25 +29,16 @@ export const fetchRatings = createAsyncThunk(
 
 export const fetchRating = createAsyncThunk(
   "rating/fetch",
-  async (
-    { id, session }: { id: number; session: any },
-    { rejectWithValue }
-  ) => {
-    const userAuth: UserAuth | undefined = session?.user;
-
-    const config = {
-      headers: {
-        "Content-type": "multipart/form-data",
-        Authorization: "Bearer " + userAuth?.data?.token,
-      },
-    };
-
+  async ({ id }: { id: number }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/rating/${id}`);
-      if (response.status === 200) {
-        const result = await response.json();
-        return result.data;
+      const response = await API.get(`/rating/${id}`);
+
+      if (response.status !== 200) {
+        throw new Error("Failed to ratings");
       }
+
+      const result = await response.data.data;
+      return result;
     } catch (error) {
       return rejectWithValue(
         (error as Error).message || "Failed to fetch rating"

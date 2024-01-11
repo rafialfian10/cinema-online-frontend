@@ -12,13 +12,15 @@ import { MovieValues } from "@/types/movie";
 export const fetchMovies = createAsyncThunk(
   "movies/fetch",
   async (thunkAPI, { rejectWithValue }) => {
-    const response = await fetch("http://localhost:5000/api/v1/movies");
-
     try {
-      if (response.status === 200) {
-        const result = await response.json();
-        return result.data;
+      const response = await API.get(`/movies`);
+
+      if (response.status !== 200) {
+        throw new Error("Failed to movies");
       }
+
+      const result = await response.data.data;
+      return result;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -27,17 +29,16 @@ export const fetchMovies = createAsyncThunk(
 
 export const fetchMovie = createAsyncThunk(
   "movie/fetch",
-  async (
-    { id }: { id: number },
-    { rejectWithValue }
-  ) => {
+  async ({ id }: { id: number }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/movie/${id}`);
-      if (response.status === 200) {
-        const result = await response.json();
-        
-        return result.data;
+      const response = await API.get(`/movie/${id}`);
+
+      if (response.status !== 200) {
+        throw new Error("Failed to movie");
       }
+
+      const result = await response.data.data;
+      return result;
     } catch (error) {
       return rejectWithValue(
         (error as Error).message || "Failed to fetch movie"

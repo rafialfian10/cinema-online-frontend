@@ -12,13 +12,15 @@ import { CategoryValues } from "@/types/category";
 export const fetchCategories = createAsyncThunk(
   "categories/fetch",
   async (thunkAPI, { rejectWithValue }) => {
-    const response = await fetch("http://localhost:5000/api/v1/categories");
-
     try {
-      if (response.status === 200) {
-        const result = await response.json();
-        return result.data;
+      const response = await API.get(`/categories`);
+
+      if (response.status !== 200) {
+        throw new Error("Failed to categories");
       }
+
+      const result = await response.data.data;
+      return result;
     } catch (error) {
       return rejectWithValue(error);
     }

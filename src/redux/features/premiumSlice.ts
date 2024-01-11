@@ -22,20 +22,14 @@ export const fetchPremiums = createAsyncThunk(
     };
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/v1/premis`,
-        {
-          cache: "no-store",
-          headers: config.headers,
-        }
-      );
+      const response = await API.get(`/premis`, config);
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch premiums");
+      if (response.status !== 200) {
+        throw new Error("Failed to premiums");
       }
 
-      const userData = await response.json();
-      return userData.data;
+      const result = await response.data.data;
+      return result;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -45,7 +39,7 @@ export const fetchPremiums = createAsyncThunk(
 export const fetchPremium = createAsyncThunk(
   "premium/fetch",
   async (
-    { id, session }: { id: number, session: any },
+    { id, session }: { id: number; session: any },
     { rejectWithValue }
   ) => {
     const userAuth: UserAuth | undefined = session?.user;
@@ -57,12 +51,14 @@ export const fetchPremium = createAsyncThunk(
     };
 
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/premi/${id}`, config);
-      if (response.status === 200) {
-        const result = await response.json();
-        
-        return result.data;
+      const response = await API.get(`/premi/${id}`, config);
+
+      if (response.status !== 200) {
+        throw new Error("Failed to premium");
       }
+
+      const result = await response.data.data;
+      return result;
     } catch (error) {
       return rejectWithValue(
         (error as Error).message || "Failed to fetch premium"
@@ -161,10 +157,7 @@ export const updatePremiumAdmin = createAsyncThunk(
 
 export const updatePremiumExpired = createAsyncThunk(
   "premium/update-premium-expired",
-  async (
-    { id }: { id: number; },
-    { rejectWithValue }
-  ) => {
+  async ({ id }: { id: number }, { rejectWithValue }) => {
     try {
       const response = await API.patch(`/premi_expired/${id}`);
 

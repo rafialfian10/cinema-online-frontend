@@ -11,7 +11,10 @@ import { TransactionValues } from "@/types/transaction";
 
 export const fetchTransactions = createAsyncThunk(
   "transactions/fetch",
-  async ({ session, status }: { session: any, status: any }, { rejectWithValue }) => {
+  async (
+    { session, status }: { session: any; status: any },
+    { rejectWithValue }
+  ) => {
     const userAuth: UserAuth | undefined = session?.user;
 
     if (status === "authenticated" && userAuth?.data?.token) {
@@ -21,22 +24,16 @@ export const fetchTransactions = createAsyncThunk(
           Authorization: "Bearer " + userAuth?.data?.token,
         },
       };
-  
+
       try {
-        const response = await fetch(
-          `http://localhost:5000/api/v1/transactions`,
-          {
-            cache: "no-store",
-            headers: config.headers,
-          }
-        );
-  
-        if (!response.ok) {
-          throw new Error("Failed to fetch transaction by user");
+        const response = await API.get(`/transactions`, config);
+
+        if (response.status !== 200) {
+          throw new Error("Failed to transactions");
         }
-  
-        const userData = await response.json();
-        return userData.data;
+
+        const result = await response.data.data;
+        return result;
       } catch (error) {
         return rejectWithValue(error);
       }
@@ -61,21 +58,14 @@ export const fetchTransactionByUser = createAsyncThunk(
       };
 
       try {
-        const response = await fetch(
-          `http://localhost:5000/api/v1/transactions_by_user`,
-          {
-            cache: "no-store",
-            headers: config.headers,
-          }
-        );
+        const response = await API.get(`/transactions_by_user`, config);
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch transaction by user");
+        if (response.status !== 200) {
+          throw new Error("Failed to transaction by user");
         }
 
-        const userData = await response.json();
-        
-        return userData.data;
+        const result = await response.data.data;
+        return result;
       } catch (error) {
         return rejectWithValue(
           (error as Error).message || "Failed to fetch transaction by user"
@@ -88,7 +78,7 @@ export const fetchTransactionByUser = createAsyncThunk(
 export const fetchTransaction = createAsyncThunk(
   "transaction/fetch",
   async (
-    { id, session }: { id: number, session: any },
+    { id, session }: { id: number; session: any },
     { rejectWithValue }
   ) => {
     const userAuth: UserAuth | undefined = session?.user;
@@ -100,12 +90,14 @@ export const fetchTransaction = createAsyncThunk(
     };
 
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/transaction/${id}`, config);
-      if (response.status === 200) {
-        const result = await response.json();
-        
-        return result.data;
+      const response = await API.get(`/transaction/${id}`, config);
+
+      if (response.status !== 200) {
+        throw new Error("Failed to transaction");
       }
+
+      const result = await response.data.data;
+      return result;
     } catch (error) {
       return rejectWithValue(
         (error as Error).message || "Failed to fetch transaction"
