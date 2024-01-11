@@ -26,7 +26,7 @@ export const fetchUserAuth = createAsyncThunk(
           Authorization: "Bearer " + userAuth?.data?.token,
         },
       };
-  
+
       try {
         // option 1
         const response = await API.get(`/user`, config);
@@ -34,7 +34,7 @@ export const fetchUserAuth = createAsyncThunk(
         if (response.status !== 200) {
           throw new Error("Failed to fetch user auth");
         }
-  
+
         const result = await response.data.data;
         return result;
 
@@ -47,7 +47,7 @@ export const fetchUserAuth = createAsyncThunk(
         // if (!response.ok) {
         //   throw new Error("Failed to fetch user auth");
         // }
-  
+
         // const userData = await response.json();
         // return userData.data;
       } catch (error) {
@@ -61,20 +61,22 @@ export const fetchUserAuth = createAsyncThunk(
 
 export const registerUser = createAsyncThunk(
   "user/register",
-  async (
-    { formData }: { formData: any },
-    { rejectWithValue }
-  ) => {
+  async ({ formData }: { formData: any }, { rejectWithValue }) => {
     try {
       const response = await API.post("/register", formData);
       if (response.status === 200) {
         const result = await response.data;
         return result;
       }
-    } catch (error) {
-      return rejectWithValue(
-        (error as Error).message || "Failed to register"
-      );
+    } catch (error: any) {
+      if (error.response && error.response.status === 409) {
+        return rejectWithValue({
+          status: 409,
+          message: "Username or email already exists.",
+        });
+      }
+
+      return rejectWithValue((error as Error).message || "Failed to register");
     }
   }
 );
@@ -227,8 +229,7 @@ const userSlices = createSlice({
     );
     builder.addCase(registerUser.rejected, (state, action) => {
       state.loading = false;
-      state.error = action.error.message;
-      // state.error = action.payload;
+      state.error = action.payload;
     });
     builder.addCase(updateUser.pending, (state) => {
       state.loading = true;
@@ -237,7 +238,8 @@ const userSlices = createSlice({
       updateUser.fulfilled,
       (state, action: PayloadAction<CheckAuthValues>) => {
         state.loading = false;
-        state.user = state.user.id === action.payload.id ? action.payload : state.user
+        state.user =
+          state.user.id === action.payload.id ? action.payload : state.user;
       }
     );
     builder.addCase(updateUser.rejected, (state, action) => {
@@ -250,7 +252,10 @@ const userSlices = createSlice({
       updateUserPhoto.fulfilled,
       (state, action: PayloadAction<ProfileValues>) => {
         state.loading = false;
-        state.userPhoto = state.userPhoto.id === action.payload.id ? action.payload : state.userPhoto
+        state.userPhoto =
+          state.userPhoto.id === action.payload.id
+            ? action.payload
+            : state.userPhoto;
       }
     );
     builder.addCase(updateUserPhoto.rejected, (state, action) => {

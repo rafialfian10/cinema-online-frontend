@@ -4,7 +4,6 @@
 import { useState, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { AxiosError } from "axios";
 
 // components redux
 import { useDispatch } from "react-redux";
@@ -46,12 +45,6 @@ export default function Register({
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
-  // state validasi password regex, state konfirmasi password, state submit register
-  const [passwordValid, setPasswordValid] = useState(true);
-  const [passwordMatch, setPasswordMatch] = useState(true);
-  const [usernameExist, setUsernameExist] = useState("");
-  const [emailExist, setEmailExist] = useState("");
-
   // handle modal login
   const handleModalLogin = () => {
     closeModalRegister();
@@ -63,49 +56,10 @@ export default function Register({
     username: "Username is required",
     email: "Email is required",
     password: "Password is required",
+    cpassword: "Confirm password is required",
     passwordValidation:
       "Password must contain at least one uppercase and lowercase letter, one digit, and be at least 8 characters long.",
-    cpassword: "Confirm password is required",
-  };
-
-  // password validation regex
-  const passwordValidationRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-
-  // Function check password validation
-  const isPasswordValid = (password: string): boolean => {
-    return passwordValidationRegex.test(password); // test berfungsi untuk menguji apakah value sesuai dengan validasi regex
-  };
-
-  // handle password validation
-  const handleValidatePasswordChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { id, value } = event.target;
-
-    // validasi karakter password
-    if (value === "") {
-      setPasswordValid(true);
-    } else {
-      const isValidPassword = isPasswordValid(value);
-      setPasswordValid(isValidPassword);
-    }
-  };
-
-  // handle confirm password
-  const handleConfirmPasswordChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { id, value } = event.target;
-
-    // validasi confirm password
-    if (id === "password" && value !== "") {
-      setPasswordMatch(true);
-    } else if (id === "cpassword" && value !== "") {
-      const password = watch("password");
-      setPasswordMatch(value === password);
-    } else {
-      setPasswordMatch(true);
-    }
+    passwordMatch: "The confirm password does not match the password",
   };
 
   // handle register
@@ -115,12 +69,13 @@ export default function Register({
     reset,
     watch,
     formState: { errors },
-  } = useForm<RegisterValues>();
+  } = useForm<RegisterValues>({
+    mode: "onChange",
+  });
 
   const onSubmit: SubmitHandler<RegisterValues> = async (formData) => {
     try {
       const response = await dispatch(registerUser({ formData }));
-
       if (response.payload && response.payload.status === 200) {
         toast.success("Register successfully!", {
           position: "top-right",
@@ -134,9 +89,19 @@ export default function Register({
           style: { marginTop: "65px" },
         });
         handleModalLogin();
-        setUsernameExist("");
-        setEmailExist("");
         reset();
+      } else if (response.payload.status === 409) {
+        toast.error("Username or email already exists.", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          style: { marginTop: "65px" },
+        });
       } else {
         toast.error("Registration failed. Please try again.", {
           position: "top-right",
@@ -150,47 +115,26 @@ export default function Register({
           style: { marginTop: "65px" },
         });
       }
-    } catch (e) {
-      if (isAxiosError(e) && e.response?.status === 409) {
-        // console.log('API Error:', e);
-        toast.error("Username or email already exists.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          style: { marginTop: "65px" },
-        });
-        // setUsernameExist('Username already exists.');
-        // setEmailExist('Email already exists.');
-      } else {
-        // console.log('API Error:', e);
-        toast.error("An error occurred. Please try again later.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          style: { marginTop: "65px" },
-        });
-      }
+    } catch (error) {
+      // console.log(error);
+      toast.error("An error occurred. Please try again later.", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        style: { marginTop: "65px" },
+      });
     }
-  };
-
-  // fungsi handle error axios
-  const isAxiosError = (error: any): error is AxiosError => {
-    return error.isAxiosError !== undefined;
   };
 
   const onError = () => {
     console.log("Register failed");
   };
+
   return (
     <section>
       <Transition appear show={modalRegister} as={Fragment}>
@@ -241,11 +185,6 @@ export default function Register({
                               })}
                             />
                           </div>
-                          {usernameExist && (
-                            <p className="text-red-500 text-left text-sm mt-1">
-                              {usernameExist}
-                            </p>
-                          )}
                           {errors.username ? (
                             <p className="mt-1 text-red-500 text-left text-sm">
                               {errors.username.message}
@@ -268,11 +207,6 @@ export default function Register({
                               })}
                             />
                           </div>
-                          {emailExist && (
-                            <p className="text-red-500 text-left text-sm mt-1">
-                              {emailExist}
-                            </p>
-                          )}
                           {errors.email ? (
                             <p className="mt-1 text-red-500 text-left text-sm">
                               {errors.email.message}
@@ -294,13 +228,10 @@ export default function Register({
                                 required: errorMessages.password,
                                 pattern: {
                                   value:
-                                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+                                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*.])[A-Za-z\d@$%^&*#.,]{8,}$/,
                                   message: errorMessages.passwordValidation,
                                 },
                               })}
-                              onChange={(e) => {
-                                handleValidatePasswordChange(e);
-                              }}
                             />
                             <span className={styles.eye_icon}>
                               {
@@ -314,15 +245,12 @@ export default function Register({
                               }
                             </span>
                           </div>
-                          {errors.password && !watch("password") && (
+                          {errors.password ? (
                             <p className="mt-1 text-red-500 text-left text-sm">
                               {errors.password.message}
                             </p>
-                          )}
-                          {!passwordValid && (
-                            <p className="text-red-500 text-left text-sm mt-1">
-                              {errorMessages.passwordValidation}
-                            </p>
+                          ) : (
+                            ""
                           )}
                         </div>
 
@@ -338,8 +266,10 @@ export default function Register({
                               className="block m-0 w-full bg-[#3E3E3E] rounded-md border-0 p-1.5 text-[#D2D2D2] shadow-sm ring-1 ring-inset ring-gray-900 placeholder:text-[#D2D2D2] focus:ring-2 focus:ring-inset focus:ring-[#3E3E3E] sm:text-sm sm:leading-6"
                               {...register("cpassword", {
                                 required: errorMessages.cpassword,
+                                validate: (value) =>
+                                  value === watch("password") ||
+                                  errorMessages.passwordMatch,
                               })}
-                              onChange={handleConfirmPasswordChange}
                             />
                             <span className={styles.eye_icon}>
                               {
@@ -357,15 +287,12 @@ export default function Register({
                               }
                             </span>
                           </div>
-                          {!passwordMatch && (
-                            <p className="mt-1 text-red-500 text-left text-sm">
-                              Passwords do not match.
-                            </p>
-                          )}
-                          {errors.cpassword && !watch("cpassword") && (
+                          {errors.cpassword ? (
                             <p className="mt-1 text-red-500 text-left text-sm">
                               {errors.cpassword.message}
                             </p>
+                          ) : (
+                            ""
                           )}
                         </div>
                       </div>
@@ -374,12 +301,7 @@ export default function Register({
                     <div className="col-span-full">
                       <input
                         type="submit"
-                        className={`w-full px-3 py-1.5 rounded-md shadow-sm bg-[#CD2E71] hover:opacity-80 text-[#D2D2D2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer ${
-                          !passwordValid || !passwordMatch
-                            ? "cursor-default hover:opacity-100"
-                            : ""
-                        }`}
-                        disabled={!passwordValid || !passwordMatch}
+                        className="w-full px-3 py-1.5 rounded-md shadow-sm bg-[#CD2E71] hover:opacity-80 text-[#D2D2D2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer"
                       />
                     </div>
                     <div className="col-span-full mt-2">
