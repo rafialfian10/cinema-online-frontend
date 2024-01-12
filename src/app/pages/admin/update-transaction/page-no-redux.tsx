@@ -117,7 +117,7 @@ function UpdateTransaction({
           confirmButton: styles["swal2-confirm"],
           cancelButton: styles["swal2-cancel"],
         },
-      }).then(async (result) => {
+      }).then(async (result: any) => {
         if (result.isConfirmed) {
           const config = {
             headers: {

@@ -14,6 +14,7 @@ export default function NotFound() {
     setTimeout(() => {
       router.push("/");
     }, 2000);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -34,7 +34,6 @@ library.add(faEye, faEyeSlash);
 import styles from "./login.module.css";
 
 // images
-import github from "@/assets/img/github.png";
 import google from "@/assets/img/google.png";
 //--------------------------------------------------------------------
 

@@ -17,9 +17,6 @@ import { updateTransaction } from "@/redux/features/transactionSlice";
 // components
 import AuthAdmin from "@/app/components/auth-admin/authAdmin";
 
-// api
-import { API } from "@/app/api/api";
-
 // types
 import { UserAuth } from "@/types/userAuth";
 
@@ -118,7 +115,7 @@ function UpdateTransaction({
           confirmButton: styles["swal2-confirm"],
           cancelButton: styles["swal2-cancel"],
         },
-      }).then(async (result) => {
+      }).then(async (result: any) => {
         if (result.isConfirmed) {
           const formData = new FormData();
           formData.append("status", "rejected");

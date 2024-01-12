@@ -143,7 +143,7 @@ export default function Navbar() {
       cancelButtonText: "No",
       confirmButtonColor: "#0D0D0D",
       cancelButtonColor: "#CD2E71",
-    }).then((result) => {
+    }).then((result: any) => {
       if (result.isConfirmed) {
         // window.location.replace('/');
         toast.success("Logout Successfully!", {

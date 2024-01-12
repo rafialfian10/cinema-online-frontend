@@ -395,7 +395,7 @@ function ProfileUser({ params }: ProfileProps) {
                 History Transaction
               </p>
               <div className="overflow-y-auto" style={{ height: "70vh" }}>
-                {transactions?.map((transaction, i) => {
+                {transactions?.map((transaction: any, i: any) => {
                   return (
                     <div
                       className="mb-5 px-5 py-3 bg-[#6e1d3e] rounded-md"

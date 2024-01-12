@@ -110,7 +110,7 @@ export default function DetailMovie({ params }: IdParamsProps) {
       formData.append("price", data.price);
 
       // Check if the movieId already exists in userTransaction
-      const movieAlreadyOwned = transactions.some((transaction) => {
+      const movieAlreadyOwned = transactions.some((transaction: any) => {
         return (
           transaction.movie_id === data.movieId &&
           (transaction.status === "success" ||
@@ -243,7 +243,7 @@ export default function DetailMovie({ params }: IdParamsProps) {
   useEffect(() => {
     if (movie?.rating && Array.isArray(movie?.rating)) {
       const totalRating = movie?.rating.reduce(
-        (acc, curr) => acc + curr.star,
+        (acc: any, curr: any) => acc + curr.star,
         0
       );
       const averageRating = totalRating / movie?.rating.length;

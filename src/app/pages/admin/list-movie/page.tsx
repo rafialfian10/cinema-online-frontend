@@ -106,7 +106,7 @@ function ListMovie() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredMovies.length > 0 ? (
-              filteredMovies?.map((movie, i) => {
+              filteredMovies?.map((movie: any, i: any) => {
                 return (
                   <div
                     className="w-30% flex flex-col justify-between rounded-md bg-[#0D0D0D]"

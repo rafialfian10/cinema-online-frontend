@@ -183,7 +183,7 @@ function UpdateMovie({
           confirmButton: styles["swal2-confirm"],
           cancelButton: styles["swal2-cancel"],
         },
-      }).then(async (result) => {
+      }).then(async (result: any) => {
         if (result.isConfirmed) {
           const config = {
             headers: {
@@ -246,7 +246,7 @@ function UpdateMovie({
           confirmButton: styles["swal2-confirm"],
           cancelButton: styles["swal2-cancel"],
         },
-      }).then(async (result) => {
+      }).then(async (result: any) => {
         if (result.isConfirmed) {
           const config = {
             headers: {
@@ -309,7 +309,7 @@ function UpdateMovie({
           confirmButton: styles["swal2-confirm"],
           cancelButton: styles["swal2-cancel"],
         },
-      }).then(async (result) => {
+      }).then(async (result: any) => {
         if (result.isConfirmed) {
           const config = {
             headers: {
@@ -458,7 +458,7 @@ function UpdateMovie({
                           </label>
                           <div className="relative mt-2 flex items-start">
                             <div className="mr-5 flex flex-col flex-wrap h-28">
-                              {categories?.map((category) => {
+                              {categories?.map((category: any) => {
                                 const isChecked = dataMovie?.category.some(
                                   (idCategory: { id: number }) =>
                                     idCategory.id == category.id

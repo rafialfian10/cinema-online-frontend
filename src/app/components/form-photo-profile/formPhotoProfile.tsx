@@ -4,7 +4,7 @@
 import Image from "next/image";
 
 // components react
-import { useState, useEffect, Suspense } from "react";
+import { Suspense } from "react";
 
 // component
 import { getUser } from "@/libs/user";

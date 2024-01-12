@@ -71,7 +71,7 @@ function MyListMovie() {
           <Loading />
         ) : (
           <div className="grid grid-cols-4 gap-3 max-md:grid-cols-2 max-sm:grid-cols-1">
-            {transactions?.map((transaction, i) => {
+            {transactions?.map((transaction: any, i: any) => {
               {
                 if (transaction?.status === "approved") {
                   return (

@@ -1,7 +1,7 @@
 "use client";
 
 // components next
-import { useSession, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 // components react

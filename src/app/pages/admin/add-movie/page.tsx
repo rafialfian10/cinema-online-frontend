@@ -135,7 +135,7 @@ function AddMovie() {
   // handle select all checkbox
   const handleChangeSelectAll = (checked: any) => {
     setValue("selectAll", checked);
-    const categoryIds = categories.map((category) => category.id);
+    const categoryIds = categories.map((category: any) => category.id);
     setValue("category", checked ? categoryIds : []);
   };
 
@@ -206,7 +206,7 @@ function AddMovie() {
               </label>
               <div className="relative mt-2 flex items-start">
                 <div className="w-full h-fit flex flex-wrap">
-                  {categories?.map((category) => {
+                  {categories?.map((category : any) => {
                     return (
                       <div
                         className="w-1/6 max-sm:w-1/3 mb-3 flex items-center"

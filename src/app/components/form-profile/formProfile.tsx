@@ -1,7 +1,7 @@
 "use client";
 
 // components react
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 // api

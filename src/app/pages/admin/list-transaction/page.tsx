@@ -134,7 +134,7 @@ function ListTransaction({
           confirmButton: styles["swal2-confirm"],
           cancelButton: styles["swal2-cancel"],
         },
-      }).then(async (result) => {
+      }).then(async (result: any) => {
         if (result.isConfirmed) {
           const response = await dispatch(deleteTransaction({ id, session }));
 
@@ -249,7 +249,7 @@ function ListTransaction({
                 </tr>
               </thead>
               {filteredTransaction.length > 0 ? (
-                filteredTransaction?.map((transaction, i) => {
+                filteredTransaction?.map((transaction: any, i: any) => {
                   const numberPage =
                     (Number(page) - 1) * Number(transactionPerPage) + i + 1;
                   return (

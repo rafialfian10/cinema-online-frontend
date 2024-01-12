@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 // components next
@@ -243,7 +244,8 @@ function ProfileUser({ params }: ProfileProps) {
             <div className="w-1/2 flex flex-col mr-5">
               <form encType="multipart/form-data">
                 {user &&
-                user?.photo && user?.photo !== "http://localhost:5000/uploads/photo/" ? (
+                user?.photo &&
+                user?.photo !== "http://localhost:5000/uploads/photo/" ? (
                   <Image
                     src={user?.photo}
                     alt="photo-profile"

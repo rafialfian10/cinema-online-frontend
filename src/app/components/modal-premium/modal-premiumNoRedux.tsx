@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 // components next
@@ -96,7 +97,7 @@ export default function ModalPremium({
         );
         if (response.data.status === 200) {
           console.log(response);
-          
+
           (window as any).snap.pay(response.data.data.token, {
             onSuccess: function (result: any) {
               toast.success("Thank you for subscribing to premium", {

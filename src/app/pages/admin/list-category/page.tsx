@@ -23,7 +23,7 @@ import AuthAdmin from "@/app/components/auth-admin/authAdmin";
 import Loading from "@/app/loading";
 
 // alert
-import Swal from "sweetalert2";
+import * as Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -94,7 +94,7 @@ function ListCategory() {
           confirmButton: styles["swal2-confirm"],
           cancelButton: styles["swal2-cancel"],
         },
-      }).then(async (result) => {
+      }).then(async (result: any) => {
         if (result.isConfirmed) {
           const response = await dispatch(deleteCategory({ id, session }));
 
@@ -219,7 +219,7 @@ function ListCategory() {
                         </tr>
                       </thead>
                       {filteredCategories.length > 0 ? (
-                        filteredCategories?.map((category, i) => {
+                        filteredCategories?.map((category: any, i: any) => {
                           return (
                             <tbody key={i}>
                               <tr className="border-b bg-[#232323]">
