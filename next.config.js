@@ -1,8 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // Menambahkan domain yang diizinkan di sini
-    domains: ['localhost'],
+    domains: ["localhost"],
     // remotePatterns: [
     //     {
     //       protocol: 'https',
@@ -12,6 +11,9 @@ const nextConfig = {
     //     },
     //   ],
   },
+  // typescript: {
+  //   ignoreBuildErrors: true,
+  // },
 };
 
 module.exports = nextConfig;

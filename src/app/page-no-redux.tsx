@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 // route auth
-import { Options } from "./api/auth/[...nextauth]/route";
+import { Options } from "./api/auth/options";
 
 // components
 import PaginationMovie from "@/app/components/pagination-movie/paginationMovie";

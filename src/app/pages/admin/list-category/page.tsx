@@ -23,7 +23,7 @@ import AuthAdmin from "@/app/components/auth-admin/authAdmin";
 import Loading from "@/app/loading";
 
 // alert
-import * as Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

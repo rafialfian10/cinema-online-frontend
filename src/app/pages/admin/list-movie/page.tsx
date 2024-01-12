@@ -144,7 +144,10 @@ function ListMovie() {
                               setModalUpdateMovie={setModalUpdateMovie}
                               setDataMovie={setDataMovie}
                             />
-                            <ButtonDeleteMovie movieId={movie?.id} fetchMovies={() => dispatch(fetchMovies())} />
+                            <ButtonDeleteMovie
+                              movieId={movie?.id}
+                              fetchMovies={() => dispatch(fetchMovies())}
+                            />
                           </div>
                         </Menu.Items>
                       </Transition>
