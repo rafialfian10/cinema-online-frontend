@@ -8,9 +8,6 @@
     "start": "next start",
     "lint": "next lint"
   },
-  "babel": {
-    "presets": ["next/babel"]
-  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
@@ -28,6 +25,7 @@
     "react-hook-form": "^7.49.3",
     "react-redux": "^9.0.4",
     "react-toastify": "^9.1.3",
+    "sharp": "^0.33.2",
     "sweetalert2": "^11.7.32",
     "swiper": "^11.0.5"
   },
