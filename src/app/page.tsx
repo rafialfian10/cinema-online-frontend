@@ -36,7 +36,7 @@ export default function Home({
 
   const start = (Number(page) - 1) * Number(moviesPerPage); // 0, 3, 6, 9
   const end = start + Number(moviesPerPage); // 3, 6, 9, 12
-  const currentMovies = movies.slice(start, end); // the amount of movie data per page
+  const currentMovies = movies?.slice(start, end); // the amount of movie data per page
 
   return (
     <section>

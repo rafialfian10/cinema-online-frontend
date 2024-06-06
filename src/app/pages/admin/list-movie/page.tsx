@@ -70,7 +70,7 @@ function ListMovie() {
   );
 
   useEffect(() => {
-    if (filteredMovies.length === 0 && search !== "") {
+    if (filteredMovies?.length === 0 && search !== "") {
       setMoviesFound(false);
     } else {
       setMoviesFound(true);
@@ -105,7 +105,7 @@ function ListMovie() {
           <Loading />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredMovies.length > 0 ? (
+            {filteredMovies?.length > 0 ? (
               filteredMovies?.map((movie: any, i: any) => {
                 return (
                   <div
